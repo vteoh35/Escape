@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task App</title>
+</head>
+<body>
+
+  <h1>Tasks</h1>
+
+  <input id="taskName" placeholder="Enter task">
+  <button onclick="createTask()">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const apiUrl = "http://localhost:5052/tasks";
+
+    async function getTasks() {
+      const response = await fetch(apiUrl);
+      const tasks = await response.json();
+
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+
+      tasks.forEach(task => {
+        const item = document.createElement("li");
+        item.textContent = `${task.id}: ${task.name}`;
+        list.appendChild(item);
+      });
+    }
+
+    async function createTask() {
+      const name = document.getElementById("taskName").value;
+
+      const task = {
+        id: Date.now(),
+        name: name
+      };
+
+      await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(task)
+      });
+
+      getTasks();
+    }
+
+    getTasks();
+  </script>
+
+</body>
+</html>
