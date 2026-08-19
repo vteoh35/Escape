@@ -24,10 +24,10 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore
-      run: dotnet restore HelloWorld.sln
+      run: dotnet restore escape.sln
 
     - name: Build
-      run: dotnet build HelloWorld.sln --configuration ${{ matrix.configuration }} --no-restore
+      run: dotnet build escape.sln --configuration ${{ matrix.configuration }} --no-restore
 
     - name: Test
-      run: dotnet test HelloWorld.sln --configuration ${{ matrix.configuration }} --no-build
+      run: dotnet test escape.sln --configuration ${{ matrix.configuration }} --no-build
