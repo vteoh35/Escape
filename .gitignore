@@ -88,6 +88,10 @@ project.fragment.lock.json
 artifacts/
 .artifacts/
 
+# .NET build artifacts
+bin/
+obj/
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
@@ -427,3 +431,9 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# macOS
+.DS_Store
+
+# Local secrets
+appsettings.Development.json
