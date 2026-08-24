@@ -17,4 +17,15 @@ public class TaskItem
         Name = name;
         IsCompleted = false;
     }
+
+    public void Update(string name, bool isCompleted)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Task name cannot be empty.");
+        }
+
+        Name = name;
+        IsCompleted = isCompleted;
+    }
 }
