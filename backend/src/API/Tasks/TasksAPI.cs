@@ -67,3 +67,20 @@ public static class TasksAPI
 public record CreateTaskRequest(string TaskId, string Name);
 
 public record UpdateTaskRequest(string Name);
+
+// TODO: not yet covered here -- task assignees and task tags.
+//
+// Task assignees (Application.Tasks):
+//   GET    /tasks/{id}/assignees              -> GetTaskAssignees.Execute(taskId)
+//   POST   /tasks/{id}/assignees                -> AssignEmployeeToTask.Execute(employeeId, taskId, role)
+//   PUT    /tasks/{id}/assignees/{employeeId}   -> UpdateTaskAssigneeRole.Execute(employeeId, taskId, role)
+//   DELETE /tasks/{id}/assignees/{employeeId}   -> UnassignEmployeeFromTask.Execute(employeeId, taskId)
+//
+// Task tags (Application.Tags) -- see also API/Tags/TagsAPI.cs:
+//   GET    /tasks/{id}/tags           -> GetTaskTags.Execute(taskId)
+//   POST   /tasks/{id}/tags/{tagId}   -> TagTask.Execute(taskId, tagId)
+//   DELETE /tasks/{id}/tags/{tagId}   -> UntagTask.Execute(taskId, tagId)
+//
+// DI (program.cs): register ITaskAssigneeRepository -> TaskAssigneeRepository (AddScoped, needs
+// AppDbContext), plus AddScoped for AssignEmployeeToTask/UnassignEmployeeFromTask/GetTaskAssignees/
+// UpdateTaskAssigneeRole.
