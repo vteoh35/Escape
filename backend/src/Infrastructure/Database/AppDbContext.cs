@@ -27,6 +27,9 @@ public class AppDbContext : DbContext
     public DbSet<ActivityLog> ActivityLogs { get; set; }
     public DbSet<ProjectMember> ProjectMembers { get; set; }
     public DbSet<TaskAssignee> TaskAssignees { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,9 +44,13 @@ public class AppDbContext : DbContext
             e.Property(x => x.Email).HasColumnName("email").HasMaxLength(150);
             e.Property(x => x.EmployeeLevel).HasColumnName("employee_level");
             e.Property(x => x.Department).HasColumnName("department").HasMaxLength(100);
+            e.Property(x => x.RoleId).HasColumnName("role_id");
             e.HasIndex(x => x.Email).IsUnique();
             e.HasOne<PositionLevel>().WithMany()
                 .HasForeignKey(x => x.EmployeeLevel).HasPrincipalKey(p => p.Level)
+                .OnDelete(DeleteBehavior.NoAction);
+            e.HasOne<Role>().WithMany()
+                .HasForeignKey(x => x.RoleId).HasPrincipalKey(r => r.RoleId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
@@ -213,6 +220,38 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction);
             e.HasOne<TaskItem>().WithMany()
                 .HasForeignKey(x => x.TaskId).HasPrincipalKey(t => t.TaskId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<Role>(e =>
+        {
+            e.ToTable("role");
+            e.HasKey(x => x.RoleId);
+            e.Property(x => x.RoleId).HasColumnName("role_id");
+            e.Property(x => x.RoleName).HasColumnName("role_name").HasMaxLength(50);
+            e.HasIndex(x => x.RoleName).IsUnique();
+        });
+
+        modelBuilder.Entity<Permission>(e =>
+        {
+            e.ToTable("permission");
+            e.HasKey(x => x.PermissionId);
+            e.Property(x => x.PermissionId).HasColumnName("permission_id");
+            e.Property(x => x.PermissionName).HasColumnName("permission_name").HasMaxLength(50);
+            e.HasIndex(x => x.PermissionName).IsUnique();
+        });
+
+        modelBuilder.Entity<RolePermission>(e =>
+        {
+            e.ToTable("role_permissions");
+            e.HasKey(x => new { x.RoleId, x.PermissionId });
+            e.Property(x => x.RoleId).HasColumnName("role_id");
+            e.Property(x => x.PermissionId).HasColumnName("permission_id");
+            e.HasOne<Role>().WithMany()
+                .HasForeignKey(x => x.RoleId).HasPrincipalKey(r => r.RoleId)
+                .OnDelete(DeleteBehavior.NoAction);
+            e.HasOne<Permission>().WithMany()
+                .HasForeignKey(x => x.PermissionId).HasPrincipalKey(p => p.PermissionId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
     }

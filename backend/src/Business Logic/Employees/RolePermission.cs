@@ -1,7 +1,7 @@
 namespace Business_Logic.Employees;
 
-public class Permission
+public class RolePermission
 {
+    public int RoleId { get; set; }
     public int PermissionId { get; set; }
-    public string PermissionName { get; set; }
 }
