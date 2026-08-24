@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Business_Logic.Employees;
+using AuthenticationEntity = Business_Logic.Employees.Authentication;
 using Business_Logic.Projects;
 using Business_Logic.Tasks;
 using Business_Logic.Statuses;
@@ -15,7 +16,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
 
     public DbSet<Employee> Employees { get; set; }
-    public DbSet<Authentication> Authentications { get; set; }
+    public DbSet<AuthenticationEntity> Authentications { get; set; }
     public DbSet<PositionLevel> PositionLevels { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<TaskItem> Tasks { get; set; }
@@ -46,7 +47,7 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
-        modelBuilder.Entity<Authentication>(e =>
+        modelBuilder.Entity<AuthenticationEntity>(e =>
         {
             e.ToTable("authentication");
             e.HasKey(x => x.EmployeeId);
