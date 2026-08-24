@@ -8,6 +8,7 @@ using Business_Logic.Priorities;
 using Business_Logic.Comments;
 using Business_Logic.Attachments;
 using Business_Logic.ActivityLogs;
+using Business_Logic.Tags;
 
 namespace Infrastructure.Database;
 
@@ -30,6 +31,9 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<TaskTag> TaskTags { get; set; }
+    public DbSet<ProjectTag> ProjectTags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -252,6 +256,43 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction);
             e.HasOne<Permission>().WithMany()
                 .HasForeignKey(x => x.PermissionId).HasPrincipalKey(p => p.PermissionId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<Tag>(e =>
+        {
+            e.ToTable("tag");
+            e.HasKey(x => x.TagId);
+            e.Property(x => x.TagId).HasColumnName("tag_id");
+            e.Property(x => x.TagName).HasColumnName("tag_name").HasMaxLength(50);
+            e.HasIndex(x => x.TagName).IsUnique();
+        });
+
+        modelBuilder.Entity<TaskTag>(e =>
+        {
+            e.ToTable("task_tags");
+            e.HasKey(x => new { x.TaskId, x.TagId });
+            e.Property(x => x.TaskId).HasColumnName("task_id").HasMaxLength(10);
+            e.Property(x => x.TagId).HasColumnName("tag_id");
+            e.HasOne<TaskItem>().WithMany()
+                .HasForeignKey(x => x.TaskId).HasPrincipalKey(t => t.TaskId)
+                .OnDelete(DeleteBehavior.NoAction);
+            e.HasOne<Tag>().WithMany()
+                .HasForeignKey(x => x.TagId).HasPrincipalKey(t => t.TagId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<ProjectTag>(e =>
+        {
+            e.ToTable("project_tags");
+            e.HasKey(x => new { x.ProjectId, x.TagId });
+            e.Property(x => x.ProjectId).HasColumnName("project_id").HasMaxLength(10);
+            e.Property(x => x.TagId).HasColumnName("tag_id");
+            e.HasOne<Project>().WithMany()
+                .HasForeignKey(x => x.ProjectId).HasPrincipalKey(p => p.ProjectID)
+                .OnDelete(DeleteBehavior.NoAction);
+            e.HasOne<Tag>().WithMany()
+                .HasForeignKey(x => x.TagId).HasPrincipalKey(t => t.TagId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
     }

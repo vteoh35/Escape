@@ -1,7 +1,7 @@
 namespace Business_Logic.Tags;
 
-public class Tag
+public class TaskTag
 {
+    public string TaskId { get; set; }
     public int TagId { get; set; }
-    public string TagName { get; set; }
 }
