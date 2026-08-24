@@ -2,19 +2,13 @@ namespace Business_Logic.Tasks;
 
 public class TaskItem
 {
-    public int Id { get; private set; }
-    public string Name { get; private set; }
-    public bool IsCompleted { get; private set; }
-
-    public TaskItem(int id, string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("Task name cannot be empty.");
-        }
-
-        Id = id;
-        Name = name;
-        IsCompleted = false;
-    }
+    public string TaskId { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
+    public int? PriorityId { get; set; }
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
+    public int? StatusId { get; set; }
+    public string? ProjectId { get; set; }
+    public string? ParentTaskId { get; set; }
 }
