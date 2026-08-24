@@ -13,9 +13,9 @@ public static class TasksAPI
         });
 
         // Get one task
-        app.MapGet("/tasks/{id}", (int id, GetTask getTask) =>
+        app.MapGet("/tasks/{taskId}", (string taskId, GetTask getTask) =>
         {
-            var task = getTask.GetById(id);
+            var task = getTask.GetById(taskId);
 
             if (task == null)
             {
@@ -28,22 +28,18 @@ public static class TasksAPI
         // Create a task
         app.MapPost("/tasks", (CreateTaskRequest request, CreateTask createTask) =>
         {
-            var task = createTask.Execute(request.Name);
+            var task = createTask.Execute(request.TaskId, request.Name);
 
-            return Results.Created($"/tasks/{task.Id}", task);
+            return Results.Created($"/tasks/{task.TaskId}", task);
         });
 
         // Update a task
-        app.MapPut("/tasks/{id}", (
-            int id,
+        app.MapPut("/tasks/{taskId}", (
+            string taskId,
             UpdateTaskRequest request,
             UpdateTask updateTask) =>
         {
-            var task = updateTask.Execute(
-                id,
-                request.Name,
-                request.IsCompleted
-            );
+            var task = updateTask.Execute(taskId, request.Name);
 
             if (task == null)
             {
@@ -54,9 +50,9 @@ public static class TasksAPI
         });
 
         // Delete a task
-        app.MapDelete("/tasks/{id}", (int id, DeleteTask deleteTask) =>
+        app.MapDelete("/tasks/{taskId}", (string taskId, DeleteTask deleteTask) =>
         {
-            var deleted = deleteTask.Execute(id);
+            var deleted = deleteTask.Execute(taskId);
 
             if (!deleted)
             {
@@ -68,9 +64,6 @@ public static class TasksAPI
     }
 }
 
-public record CreateTaskRequest(string Name);
+public record CreateTaskRequest(string TaskId, string Name);
 
-public record UpdateTaskRequest(
-    string Name,
-    bool IsCompleted
-);
+public record UpdateTaskRequest(string Name);

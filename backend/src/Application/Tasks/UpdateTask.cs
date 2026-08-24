@@ -11,16 +11,16 @@ public class UpdateTask
         _taskRepository = taskRepository;
     }
 
-    public TaskItem? Execute(int id, string name, bool isCompleted)
+    public TaskItem? Execute(string taskId, string name)
     {
-        var task = _taskRepository.GetById(id);
+        var task = _taskRepository.GetById(taskId);
 
         if (task == null)
         {
             return null;
         }
 
-        task.Update(name, isCompleted);
+        task.Name = name;
 
         _taskRepository.Update(task);
 

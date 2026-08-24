@@ -16,8 +16,8 @@ public class GetTask
         return _taskRepository.GetAll();
     }
 
-    public TaskItem? GetById(int id)
+    public TaskItem? GetById(string taskId)
     {
-        return _taskRepository.GetById(id);
+        return _taskRepository.GetById(taskId);
     }
 }

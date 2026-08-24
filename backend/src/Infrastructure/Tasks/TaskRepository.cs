@@ -12,9 +12,9 @@ public class TaskRepository : ITaskRepository
         return _tasks;
     }
 
-    public TaskItem? GetById(int id)
+    public TaskItem? GetById(string taskId)
     {
-        return _tasks.FirstOrDefault(task => task.Id == id);
+        return _tasks.FirstOrDefault(task => task.TaskId == taskId);
     }
 
     public void Add(TaskItem task)

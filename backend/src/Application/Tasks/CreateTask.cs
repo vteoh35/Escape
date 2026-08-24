@@ -11,15 +11,13 @@ public class CreateTask
         _taskRepository = taskRepository;
     }
 
-    public TaskItem Execute(string name)
+    public TaskItem Execute(string taskId, string name)
     {
-        var tasks = _taskRepository.GetAll();
-
-        int newId = tasks.Count == 0
-            ? 1
-            : tasks.Max(task => task.Id) + 1;
-
-        var task = new TaskItem(newId, name);
+        var task = new TaskItem
+        {
+            TaskId = taskId,
+            Name = name
+        };
 
         _taskRepository.Add(task);
 

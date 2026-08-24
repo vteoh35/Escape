@@ -9,9 +9,9 @@ public class DeleteTask
         _taskRepository = taskRepository;
     }
 
-    public bool Execute(int id)
+    public bool Execute(string taskId)
     {
-        var task = _taskRepository.GetById(id);
+        var task = _taskRepository.GetById(taskId);
 
         if (task == null)
         {
