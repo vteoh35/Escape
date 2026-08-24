@@ -1,35 +1,42 @@
 using Application.Tasks;
 using Business_Logic.Tasks;
+using Infrastructure.Database;
 
 namespace Infrastructure.Tasks;
 
 public class TaskRepository : ITaskRepository
 {
-    private readonly List<TaskItem> _tasks = new();
+    private readonly AppDbContext _context;
+
+    public TaskRepository(AppDbContext context)
+    {
+        _context = context;
+    }
 
     public List<TaskItem> GetAll()
     {
-        return _tasks;
+        return _context.Tasks.ToList();
     }
 
     public TaskItem? GetById(string taskId)
     {
-        return _tasks.FirstOrDefault(task => task.TaskId == taskId);
+        return _context.Tasks.FirstOrDefault(task => task.TaskId == taskId);
     }
 
     public void Add(TaskItem task)
     {
-        _tasks.Add(task);
+        _context.Tasks.Add(task);
+        _context.SaveChanges();
     }
 
     public void Update(TaskItem task)
     {
-        // Nothing required yet because the task object
-        // already exists inside the list.
+        _context.SaveChanges();
     }
 
     public void Delete(TaskItem task)
     {
-        _tasks.Remove(task);
+        _context.Tasks.Remove(task);
+        _context.SaveChanges();
     }
 }
