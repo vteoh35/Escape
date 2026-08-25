@@ -1,4 +1,5 @@
 using System.Text;
+using API.Middleware;
 using API.Tasks;
 using Application.Authentication;
 using Application.Authorization;
@@ -73,6 +74,8 @@ builder.Services.AddScoped<Login>();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseCors("Frontend");
 
 app.UseAuthentication();
@@ -99,9 +102,14 @@ app.MapTaskEndpoints();
 //   API/PositionLevels/PositionLevelsAPI.cs
 //   API/Tasks/TasksAPI.cs (assignees + tags -- see TODO at the bottom of that file)
 //
-// TODO: wire up remaining middleware (see TODOs in each file for details):
-//   app.UseMiddleware<ExceptionMiddleware>()   -- add early, before routing
+// TODO: wire up remaining middleware (see TODO in the file for details):
 //   app.UseMiddleware<LoggingMiddleware>()
+//
+// Exception handling is already wired above (ExceptionMiddleware, first in the pipeline) -- any
+// unhandled exception anywhere downstream (including in auth/EF/your endpoints) becomes a generic
+// 500 JSON response instead of leaking a stack trace. It currently returns the same generic message
+// for every exception type; see the TODO in ExceptionMiddleware.cs if you want specific exception
+// types mapped to specific status codes later (e.g. a "not found" domain exception -> 404).
 //
 // Authentication/authorization is already wired above. To require a valid token on a route:
 //   app.MapPost("/projects", ...).RequireAuthorization();
