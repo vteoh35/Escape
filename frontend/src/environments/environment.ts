@@ -3,5 +3,5 @@
 // Mock API (in-memory, no DB):      http://localhost:5100
 // Real backend (Postgres-backed):   http://localhost:5052
 export const environment = {
-  apiUrl: 'http://localhost:5100'
+  apiUrl: 'http://localhost:5052'
 };
