@@ -1,16 +1,38 @@
-// TODO: implement Attachments API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Attachments):
-//   GET    /attachments            -> GetAttachment.GetAll()
-//   GET    /attachments/{id}       -> GetAttachment.GetById(attachmentId)
-//   POST   /attachments            -> CreateAttachment.Execute(attachmentId, attachmentLocation, projectId, taskId)
-//   PUT    /attachments/{id}       -> UpdateAttachment.Execute(attachmentId, attachmentLocation)
-//   DELETE /attachments/{id}       -> DeleteAttachment.Execute(attachmentId)
-//
-// Note: AttachmentLocation is just a string (e.g. a file path/URL) in the current model -- there's
-// no file upload/storage handling built yet. If real file uploads are needed, that's new scope
-// (e.g. saving to disk/blob storage and storing the resulting location here).
-//
-// DI (program.cs): register IAttachmentRepository -> AttachmentsRepository (AddScoped, needs AppDbContext),
-// plus AddScoped for CreateAttachment/GetAttachment/UpdateAttachment/DeleteAttachment.
+using Application.Attachments;
+
+namespace API.Attachments;
+
+public static class AttachmentsAPI
+{
+    public static void MapAttachmentEndpoints(this WebApplication app)
+    {
+        app.MapGet("/attachments", (GetAttachment getAttachment) => Results.Ok(getAttachment.GetAll()));
+
+        app.MapGet("/attachments/{id}", (string id, GetAttachment getAttachment) =>
+        {
+            var attachment = getAttachment.GetById(id);
+            return attachment == null ? Results.NotFound() : Results.Ok(attachment);
+        });
+
+        app.MapPost("/attachments", (CreateAttachmentRequest request, CreateAttachment createAttachment) =>
+        {
+            var attachment = createAttachment.Execute(request.AttachmentId, request.AttachmentLocation, request.ProjectId, request.TaskId);
+            return Results.Created($"/attachments/{attachment.AttachmentId}", attachment);
+        });
+
+        app.MapPut("/attachments/{id}", (string id, UpdateAttachmentRequest request, UpdateAttachment updateAttachment) =>
+        {
+            var attachment = updateAttachment.Execute(id, request.AttachmentLocation);
+            return attachment == null ? Results.NotFound() : Results.Ok(attachment);
+        });
+
+        app.MapDelete("/attachments/{id}", (string id, DeleteAttachment deleteAttachment) =>
+        {
+            var deleted = deleteAttachment.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record CreateAttachmentRequest(string AttachmentId, string AttachmentLocation, string? ProjectId, string? TaskId);
+public record UpdateAttachmentRequest(string AttachmentLocation);

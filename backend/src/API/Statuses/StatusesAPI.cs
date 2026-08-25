@@ -1,16 +1,37 @@
-// TODO: implement Statuses API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Statuses):
-//   GET    /statuses            -> GetStatus.GetAll()
-//   GET    /statuses/{id}       -> GetStatus.GetById(statusId)
-//   POST   /statuses            -> CreateStatus.Execute(statusId, statusName)
-//                                   (statusId is manually assigned, not DB-generated -- caller picks it)
-//   PUT    /statuses/{id}       -> UpdateStatus.Execute(statusId, statusName)
-//   DELETE /statuses/{id}       -> DeleteStatus.Execute(statusId)
-//
-// This is small, mostly-static lookup data (3 seeded rows: To Do/In Progress/Completed) referenced
-// by Task.StatusId and Project.StatusId -- likely only needs admin-level CRUD, if any at all.
-//
-// DI (program.cs): register IStatusRepository -> StatusRepository (AddScoped, needs AppDbContext),
-// plus AddScoped for CreateStatus/GetStatus/UpdateStatus/DeleteStatus.
+using Application.Statuses;
+
+namespace API.Statuses;
+
+public static class StatusesAPI
+{
+    public static void MapStatusEndpoints(this WebApplication app)
+    {
+        app.MapGet("/statuses", (GetStatus getStatus) => Results.Ok(getStatus.GetAll()));
+
+        app.MapGet("/statuses/{id}", (int id, GetStatus getStatus) =>
+        {
+            var status = getStatus.GetById(id);
+            return status == null ? Results.NotFound() : Results.Ok(status);
+        });
+
+        app.MapPost("/statuses", (StatusRequest request, CreateStatus createStatus) =>
+        {
+            var status = createStatus.Execute(request.StatusId, request.StatusName);
+            return Results.Created($"/statuses/{status.StatusId}", status);
+        });
+
+        app.MapPut("/statuses/{id}", (int id, StatusRequest request, UpdateStatus updateStatus) =>
+        {
+            var status = updateStatus.Execute(id, request.StatusName);
+            return status == null ? Results.NotFound() : Results.Ok(status);
+        });
+
+        app.MapDelete("/statuses/{id}", (int id, DeleteStatus deleteStatus) =>
+        {
+            var deleted = deleteStatus.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record StatusRequest(int StatusId, string StatusName);

@@ -1,18 +1,24 @@
-// TODO: implement Authentication API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Application.Authentication:
-//   POST /auth/register  -> RegisterCredentials.Execute(employeeId, password)
-//                           (only meaningful for an employee row that already exists -- FK to employee)
-//   POST /auth/login     -> Login.Execute(employeeId, password)
-//                           returns a JWT string on success, null on bad credentials -> 401
-//
-// DI (program.cs): register
-//   IAuthenticationRepository -> AuthenticationRepository
-//   IPasswordHasher -> PasswordHasher
-//   ITokenService -> TokenService  (constructor needs the signing key -- see
-//     API/middleware/AuthenticatonMiddleware.cs for how that key should be sourced)
-//   plus AddScoped for RegisterCredentials and Login.
-//
-// Once this exists, wire up API/middleware/AuthenticatonMiddleware.cs (JWT bearer validation) so
-// other endpoints can require [Authorize] / require a valid token.
+using Application.Authentication;
+
+namespace API.Authentication;
+
+public static class AuthenticationAPI
+{
+    public static void MapAuthenticationEndpoints(this WebApplication app)
+    {
+        app.MapPost("/auth/register", (RegisterRequest request, RegisterCredentials registerCredentials) =>
+        {
+            var authentication = registerCredentials.Execute(request.EmployeeId, request.Password);
+            return Results.Created($"/employees/{authentication.EmployeeId}", new { authentication.EmployeeId });
+        });
+
+        app.MapPost("/auth/login", (LoginRequest request, Login login) =>
+        {
+            var token = login.Execute(request.EmployeeId, request.Password);
+            return token == null ? Results.Unauthorized() : Results.Ok(new { token });
+        });
+    }
+}
+
+public record RegisterRequest(string EmployeeId, string Password);
+public record LoginRequest(string EmployeeId, string Password);

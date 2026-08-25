@@ -1,14 +1,37 @@
-// TODO: implement Permissions API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Permissions):
-//   GET    /permissions            -> GetPermission.GetAll()
-//   GET    /permissions/{id}       -> GetPermission.GetById(permissionId)
-//   POST   /permissions            -> CreatePermission.Execute(permissionName)  (permissionId is DB-generated)
-//   PUT    /permissions/{id}       -> UpdatePermission.Execute(permissionId, permissionName)
-//   DELETE /permissions/{id}       -> DeletePermission.Execute(permissionId)
-//
-// See API/Roles/RolesAPI.cs for assigning permissions to roles.
-//
-// DI (program.cs): register IPermissionRepository -> PermissionRepository (AddScoped, needs
-// AppDbContext), plus AddScoped for CreatePermission/GetPermission/UpdatePermission/DeletePermission.
+using Application.Permissions;
+
+namespace API.Permissions;
+
+public static class PermissionsAPI
+{
+    public static void MapPermissionEndpoints(this WebApplication app)
+    {
+        app.MapGet("/permissions", (GetPermission getPermission) => Results.Ok(getPermission.GetAll()));
+
+        app.MapGet("/permissions/{id}", (int id, GetPermission getPermission) =>
+        {
+            var permission = getPermission.GetById(id);
+            return permission == null ? Results.NotFound() : Results.Ok(permission);
+        });
+
+        app.MapPost("/permissions", (CreatePermissionRequest request, CreatePermission createPermission) =>
+        {
+            var permission = createPermission.Execute(request.PermissionName);
+            return Results.Created($"/permissions/{permission.PermissionId}", permission);
+        });
+
+        app.MapPut("/permissions/{id}", (int id, CreatePermissionRequest request, UpdatePermission updatePermission) =>
+        {
+            var permission = updatePermission.Execute(id, request.PermissionName);
+            return permission == null ? Results.NotFound() : Results.Ok(permission);
+        });
+
+        app.MapDelete("/permissions/{id}", (int id, DeletePermission deletePermission) =>
+        {
+            var deleted = deletePermission.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record CreatePermissionRequest(string PermissionName);

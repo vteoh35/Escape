@@ -1,17 +1,37 @@
-// TODO: implement PositionLevels API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.PositionLevels):
-//   GET    /position-levels            -> GetPositionLevel.GetAll()
-//   GET    /position-levels/{level}    -> GetPositionLevel.GetByLevel(level)
-//   POST   /position-levels            -> CreatePositionLevel.Execute(level, position)
-//                                          (level is manually assigned, not DB-generated -- caller picks it;
-//                                           position can be null)
-//   PUT    /position-levels/{level}    -> UpdatePositionLevel.Execute(level, position)
-//   DELETE /position-levels/{level}    -> DeletePositionLevel.Execute(level)
-//
-// This is small, mostly-static lookup data (3 seeded rows) referenced by Employee.EmployeeLevel --
-// likely only needs admin-level CRUD, if any at all.
-//
-// DI (program.cs): register IPositionLevelRepository -> PositionLevelRepository (AddScoped, needs
-// AppDbContext), plus AddScoped for CreatePositionLevel/GetPositionLevel/UpdatePositionLevel/DeletePositionLevel.
+using Application.PositionLevels;
+
+namespace API.PositionLevels;
+
+public static class PositionLevelsAPI
+{
+    public static void MapPositionLevelEndpoints(this WebApplication app)
+    {
+        app.MapGet("/position-levels", (GetPositionLevel getPositionLevel) => Results.Ok(getPositionLevel.GetAll()));
+
+        app.MapGet("/position-levels/{level}", (int level, GetPositionLevel getPositionLevel) =>
+        {
+            var positionLevel = getPositionLevel.GetByLevel(level);
+            return positionLevel == null ? Results.NotFound() : Results.Ok(positionLevel);
+        });
+
+        app.MapPost("/position-levels", (PositionLevelRequest request, CreatePositionLevel createPositionLevel) =>
+        {
+            var positionLevel = createPositionLevel.Execute(request.Level, request.Position);
+            return Results.Created($"/position-levels/{positionLevel.Level}", positionLevel);
+        });
+
+        app.MapPut("/position-levels/{level}", (int level, PositionLevelRequest request, UpdatePositionLevel updatePositionLevel) =>
+        {
+            var positionLevel = updatePositionLevel.Execute(level, request.Position);
+            return positionLevel == null ? Results.NotFound() : Results.Ok(positionLevel);
+        });
+
+        app.MapDelete("/position-levels/{level}", (int level, DeletePositionLevel deletePositionLevel) =>
+        {
+            var deleted = deletePositionLevel.Execute(level);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record PositionLevelRequest(int Level, string? Position);

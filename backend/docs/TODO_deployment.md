@@ -4,9 +4,15 @@ Read `docs/PROJECT_STATUS.md` first for overall context if you haven't.
 
 ## Current state
 
-Nothing exists here. No `Dockerfile`, no CI/CD pipeline (no `.github/workflows/`, no other CI
-config), no hosting target decided or configured. The app has only ever been run with
-`dotnet run --project src/API` against a local Postgres instance.
+`.github/workflows/ci.yml` builds and tests `escape.sln` (backend) and `frontend/` on every
+push/PR to main. `escape.sln` now actually references the real backend projects (Business Logic,
+Application, Infrastructure, API) -- it was empty before, which meant CI was passing without
+building anything; that's fixed. `UnitTests`/`ApiTests` are still empty 0-byte files (not valid
+projects), so they're deliberately left out of the solution -- adding them back in once they have
+real content is part of `docs/TODO_testing.md`, not this doc.
+
+Still nothing beyond that: no `Dockerfile`, no CD, no hosting target decided or configured. The app
+has only ever been run with `dotnet run --project src/API` against a local Postgres instance.
 
 ## What's needed (roughly in order)
 
@@ -22,12 +28,10 @@ config), no hosting target decided or configured. The app has only ever been run
    `dotnet ef database update`. Decide how that happens for a real deployment -- e.g. run migrations
    as a startup step, or a separate pipeline step before the app starts, so schema changes ship
    safely instead of relying on someone remembering to run the command by hand.
-4. **CI**: run `dotnet build` and (once they exist -- see `docs/TODO_testing.md`) `dotnet test` on
-   every push/PR. GitHub Actions is the obvious choice given this is a GitHub repo, but again, not
-   prescribed here if the team wants something else.
-5. **CD**: deploy on merge to main (or a release process, if a more controlled rollout is wanted).
-   Depends entirely on the hosting decision from step 1.
-6. Health check endpoint for whatever platform needs one (most container hosts/load balancers want
+4. **CD**: deploy on merge to main (or a release process, if a more controlled rollout is wanted).
+   Depends entirely on the hosting decision from step 1. CI (build + test) already exists; this is
+   the missing "and then actually deploy it" half.
+5. Health check endpoint for whatever platform needs one (most container hosts/load balancers want
    a `/health`-style route to confirm the app is up) -- trivial to add once needed, not worth
    building speculatively before the host is chosen.
 

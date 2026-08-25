@@ -1,15 +1,38 @@
-// TODO: implement Comments API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Comments):
-//   GET    /comments            -> GetComment.GetAll()
-//   GET    /comments/{id}       -> GetComment.GetById(commentId)
-//   POST   /comments            -> CreateComment.Execute(commentId, description, taskId, employeeId)
-//   PUT    /comments/{id}       -> UpdateComment.Execute(commentId, description)
-//   DELETE /comments/{id}       -> DeleteComment.Execute(commentId)
-//
-// Consider nesting under a task instead, e.g. GET /tasks/{taskId}/comments, if that fits the
-// frontend's navigation better than a flat /comments collection.
-//
-// DI (program.cs): register ICommentRepository -> CommentRepository (AddScoped, needs AppDbContext),
-// plus AddScoped for CreateComment/GetComment/UpdateComment/DeleteComment.
+using Application.Comments;
+
+namespace API.Comments;
+
+public static class CommentsAPI
+{
+    public static void MapCommentEndpoints(this WebApplication app)
+    {
+        app.MapGet("/comments", (GetComment getComment) => Results.Ok(getComment.GetAll()));
+
+        app.MapGet("/comments/{id}", (string id, GetComment getComment) =>
+        {
+            var comment = getComment.GetById(id);
+            return comment == null ? Results.NotFound() : Results.Ok(comment);
+        });
+
+        app.MapPost("/comments", (CreateCommentRequest request, CreateComment createComment) =>
+        {
+            var comment = createComment.Execute(request.CommentId, request.Description, request.TaskId, request.EmployeeId);
+            return Results.Created($"/comments/{comment.CommentId}", comment);
+        });
+
+        app.MapPut("/comments/{id}", (string id, UpdateCommentRequest request, UpdateComment updateComment) =>
+        {
+            var comment = updateComment.Execute(id, request.Description);
+            return comment == null ? Results.NotFound() : Results.Ok(comment);
+        });
+
+        app.MapDelete("/comments/{id}", (string id, DeleteComment deleteComment) =>
+        {
+            var deleted = deleteComment.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record CreateCommentRequest(string CommentId, string Description, string? TaskId, string? EmployeeId);
+public record UpdateCommentRequest(string Description);

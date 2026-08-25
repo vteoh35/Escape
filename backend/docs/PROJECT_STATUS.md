@@ -17,10 +17,10 @@ Clean Architecture, four projects under `backend/src/`:
 - **`API`** -- ASP.NET Core minimal API endpoints, middleware, `program.cs` (DI + pipeline wiring).
   Depends on Application and Infrastructure.
 
-**Ownership split**: one person owns Business Logic + Application + Infrastructure, the other owns
-API. This matters because the API layer is deliberately left with only TODO comments (no logic) in
-files that aren't the API owner's -- don't fill those in unless you're told to; the point was to
-hand off a clear spec, not to build it for them.
+**Ownership split**: originally one person owned Business Logic + Application + Infrastructure, the
+other owned API, with the API layer left as TODO comments as a handoff spec. To get to a deployable
+backend quickly, the API layer was then fully implemented by the same person who did the other three
+layers -- see "What's built" below, all of it is real now, not a spec.
 
 ## Database
 
@@ -64,29 +64,64 @@ implementation, and CRUD (or equivalent) use-case classes:
 | ProjectMember / TaskAssignee | "assign employee to X" join tables, with an optional free-text `Role` label (unrelated to the RBAC `Role` entity -- unfortunate naming collision, be aware) |
 | Priority / Status / PositionLevel | Small static lookup tables; use manually-assigned ids (not DB-generated), unlike Role/Permission/Tag |
 | **Authorization mechanism** | `Application.Authorization.GetEmployeePermissions` + `Infrastructure.Authorization.PermissionRequirement`/`PermissionAuthorizationHandler`, wired into ASP.NET Core's authorization framework via `program.cs`. Routes just call `.RequireAuthorization()` or pass a `PermissionRequirement` -- no further plumbing needed. |
-| **Global exception handling** | `API/middleware/ExceptionMiddleware.cs` -- catches everything, returns a flat 500 with a safe message, logs the real exception server-side. Already wired first in the pipeline. |
+| **Global exception handling** | `API/middleware/ExceptionMiddleware.cs` -- catches everything, returns a flat 500 with a safe message, logs the real exception server-side. Wired first in the pipeline. |
+| **Request logging** | `API/middleware/LoggingMiddleware.cs` -- logs method/path/status/duration for every request. |
+| **API layer** | Every feature above has real, working HTTP endpoints in `src/API/<Feature>/<Feature>API.cs` (not TODO comments) -- see "API surface" below. |
 
-Every one of the above was verified against **real Postgres data** during development (not mocked)
--- typically via a disposable scratch console project (`dotnet new console` referencing
-`Infrastructure.csproj`, run against the real connection string, then deleted) since there was no
-running API server to test through for most of this work. If you add something new, verify it the
-same way before considering it done.
+Every one of the above was verified against **real Postgres data** (not mocked) -- either via a
+disposable scratch console project during earlier development, or (for the full API layer) by
+actually running `dotnet run --project src/API` and hitting real routes with `curl`, including a
+full register -> wrong-password-401 -> correct-password-200-with-JWT flow, nested routes
+(`/projects/{id}/members`, `/tasks/{id}/assignees`, etc.), and confirming `ExceptionMiddleware`
+turns a real FK-violation `DbUpdateException` into a clean 500 instead of a leaked stack trace. If
+you add something new, verify it the same way before considering it done.
+
+## API surface
+
+Base URL when running locally: `http://localhost:5052` (or whatever `--urls` you pass). All routes
+are currently unauthenticated by default (no `.RequireAuthorization()` calls yet) -- see the note
+at the bottom of `program.cs` for how to add auth/permission requirements to a route once that's a
+product decision someone wants to make.
+
+| Resource | Routes |
+|---|---|
+| Tasks | `GET/POST /tasks`, `GET/PUT/DELETE /tasks/{id}`, `GET/POST /tasks/{id}/assignees`, `PUT/DELETE /tasks/{id}/assignees/{employeeId}`, `GET /tasks/{id}/tags`, `POST/DELETE /tasks/{id}/tags/{tagId}` |
+| Projects | `GET/POST /projects`, `GET/PUT/DELETE /projects/{id}`, `GET/POST /projects/{id}/members`, `PUT/DELETE /projects/{id}/members/{employeeId}`, `GET /projects/{id}/tags`, `POST/DELETE /projects/{id}/tags/{tagId}` |
+| Employees | `GET/POST /employees`, `GET/PUT/DELETE /employees/{id}` |
+| Comments | `GET/POST /comments`, `GET/PUT/DELETE /comments/{id}` |
+| Attachments | `GET/POST /attachments`, `GET/PUT/DELETE /attachments/{id}` |
+| Tags | `GET/POST /tags`, `GET/PUT/DELETE /tags/{id}` |
+| Authentication | `POST /auth/register`, `POST /auth/login` (returns `{ token }` or 401) |
+| Activity logs | `GET/POST /activity-logs`, `GET/PUT/DELETE /activity-logs/{id}` |
+| Roles | `GET/POST /roles`, `GET/PUT/DELETE /roles/{id}`, `GET /roles/{id}/permissions`, `POST/DELETE /roles/{id}/permissions/{permissionId}` |
+| Permissions | `GET/POST /permissions`, `GET/PUT/DELETE /permissions/{id}` |
+| Priorities | `GET/POST /priorities`, `GET/PUT/DELETE /priorities/{id}` |
+| Statuses | `GET/POST /statuses`, `GET/PUT/DELETE /statuses/{id}` |
+| Position levels | `GET/POST /position-levels`, `GET/PUT/DELETE /position-levels/{level}` |
+
+Identity-generated ids (Role, Permission, Tag) don't take an id in the `POST` body -- the DB
+assigns it. Everything else (Task, Project, Employee, Comment, Attachment, ActivityLog, Priority,
+Status, PositionLevel) uses a manually-assigned id, so the client provides it.
 
 ## What's NOT built yet
 
-- **API endpoints** -- most `*API.cs` files under `src/API/` are TODO-only (see each file's
-  comment for the exact routes/use-case mapping). `program.cs` has a checklist near the bottom of
-  every `Map*Endpoints()` call and DI registration still needed. `TasksAPI.cs` is the one fully
-  implemented example to copy the pattern from.
-- **Input validation** -- see `docs/TODO_input_validation.md`
-- **Automated tests** -- `src/tests/UnitTests` and `src/tests/ApiTests` exist as empty project
-  shells with no test files. See `docs/TODO_testing.md`
-- **Production configuration** -- only local dev config exists. See `docs/TODO_production_config.md`
-- **Deployment** -- nothing (no Docker, no CI/CD, no hosting). See `docs/TODO_deployment.md`
-- **Frontend integration** -- the Angular app in `frontend/` is untouched/unconnected to this
-  backend. See `docs/TODO_frontend_integration.md`
-- **Request logging middleware** -- `API/middleware/LoggingMiddleware.cs` is still TODO-only
-  (unlike `ExceptionMiddleware`, which is done)
+- **Input validation** -- see `docs/TODO_input_validation.md`. Bad input mostly surfaces as a
+  generic 500 via `ExceptionMiddleware` right now (e.g. a duplicate id is a real DB constraint
+  violation, correctly caught, but a 400 with a clear message would be better than a 500).
+- **Automated tests** -- `src/tests/UnitTests` and `src/tests/ApiTests` exist as empty (literally
+  0-byte) project files, not even valid `.csproj`s -- deliberately left out of `escape.sln` for now
+  since including them breaks the build. See `docs/TODO_testing.md`.
+- **Production configuration** -- only local dev config exists (`appsettings.Development.json`,
+  gitignored). See `docs/TODO_production_config.md`.
+- **Deployment** -- CI (`.github/workflows/ci.yml`) builds and tests `escape.sln` on push/PR, but
+  there's no Dockerfile, no CD, no hosting decided. See `docs/TODO_deployment.md`.
+- **Frontend integration** -- in progress on the frontend side against `mock-api/` (see
+  `frontend/src/environments/environment.ts`); the real backend endpoints above now exist for every
+  feature, not just Tasks, so the frontend can be pointed at the real backend (`http://localhost:5052`)
+  feature-by-feature as it's ready. See `docs/TODO_frontend_integration.md`.
+- **Route-level permission enforcement** -- the RBAC mechanism works (verified), but no route
+  currently calls `.RequireAuthorization(...)`. Deciding which endpoints need which permission is a
+  product decision, intentionally left open.
 - **Tags entity** design note: only `Tag`/`TaskTag`/`ProjectTag` were built. `Role.cs` and
   `Permission.cs` under `Business_Logic/Employees/` are the RBAC entities (unrelated to Tags,
   despite Role/Permission sounding similar to Tag).

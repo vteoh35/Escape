@@ -1,21 +1,52 @@
-// TODO: implement Roles API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Roles):
-//   GET    /roles            -> GetRole.GetAll()
-//   GET    /roles/{id}       -> GetRole.GetById(roleId)
-//   POST   /roles            -> CreateRole.Execute(roleName)   (roleId is DB-generated, don't take it as input)
-//   PUT    /roles/{id}       -> UpdateRole.Execute(roleId, roleName)
-//   DELETE /roles/{id}       -> DeleteRole.Execute(roleId)
-//
-// Role permissions (Application.Roles):
-//   GET    /roles/{id}/permissions                -> GetRolePermissions.Execute(roleId)
-//   POST   /roles/{id}/permissions/{permissionId}   -> AssignPermissionToRole.Execute(roleId, permissionId)
-//   DELETE /roles/{id}/permissions/{permissionId}   -> RemovePermissionFromRole.Execute(roleId, permissionId)
-//
-// See also API/Permissions/PermissionsAPI.cs for managing permissions themselves.
-// An employee's role is Employee.RoleId -- see API/Employees/EmployeesAPI.cs's TODO for assigning it.
-//
-// DI (program.cs): register IRoleRepository -> RoleRepository, IRolePermissionRepository ->
-// RolePermissionRepository (both AddScoped, need AppDbContext), plus AddScoped for
-// CreateRole/GetRole/UpdateRole/DeleteRole/AssignPermissionToRole/RemovePermissionFromRole/GetRolePermissions.
+using Application.Roles;
+
+namespace API.Roles;
+
+public static class RolesAPI
+{
+    public static void MapRoleEndpoints(this WebApplication app)
+    {
+        app.MapGet("/roles", (GetRole getRole) => Results.Ok(getRole.GetAll()));
+
+        app.MapGet("/roles/{id}", (int id, GetRole getRole) =>
+        {
+            var role = getRole.GetById(id);
+            return role == null ? Results.NotFound() : Results.Ok(role);
+        });
+
+        app.MapPost("/roles", (CreateRoleRequest request, CreateRole createRole) =>
+        {
+            var role = createRole.Execute(request.RoleName);
+            return Results.Created($"/roles/{role.RoleId}", role);
+        });
+
+        app.MapPut("/roles/{id}", (int id, CreateRoleRequest request, UpdateRole updateRole) =>
+        {
+            var role = updateRole.Execute(id, request.RoleName);
+            return role == null ? Results.NotFound() : Results.Ok(role);
+        });
+
+        app.MapDelete("/roles/{id}", (int id, DeleteRole deleteRole) =>
+        {
+            var deleted = deleteRole.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+
+        app.MapGet("/roles/{id}/permissions", (int id, GetRolePermissions getRolePermissions) =>
+            Results.Ok(getRolePermissions.Execute(id)));
+
+        app.MapPost("/roles/{id}/permissions/{permissionId}", (int id, int permissionId, AssignPermissionToRole assign) =>
+        {
+            var rolePermission = assign.Execute(id, permissionId);
+            return Results.Created($"/roles/{id}/permissions/{permissionId}", rolePermission);
+        });
+
+        app.MapDelete("/roles/{id}/permissions/{permissionId}", (int id, int permissionId, RemovePermissionFromRole remove) =>
+        {
+            var removed = remove.Execute(id, permissionId);
+            return removed ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record CreateRoleRequest(string RoleName);

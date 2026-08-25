@@ -61,6 +61,27 @@ public static class TasksAPI
 
             return Results.NoContent();
         });
+
+        app.MapGet("/tasks/{id}/assignees", (string id, GetTaskAssignees getTaskAssignees) =>
+            Results.Ok(getTaskAssignees.Execute(id)));
+
+        app.MapPost("/tasks/{id}/assignees", (string id, AssignTaskRequest request, AssignEmployeeToTask assignEmployeeToTask) =>
+        {
+            var assignee = assignEmployeeToTask.Execute(request.EmployeeId, id, request.Role);
+            return Results.Created($"/tasks/{id}/assignees/{request.EmployeeId}", assignee);
+        });
+
+        app.MapPut("/tasks/{id}/assignees/{employeeId}", (string id, string employeeId, UpdateTaskAssigneeRoleRequest request, UpdateTaskAssigneeRole updateRole) =>
+        {
+            var assignee = updateRole.Execute(employeeId, id, request.Role);
+            return assignee == null ? Results.NotFound() : Results.Ok(assignee);
+        });
+
+        app.MapDelete("/tasks/{id}/assignees/{employeeId}", (string id, string employeeId, UnassignEmployeeFromTask unassign) =>
+        {
+            var removed = unassign.Execute(employeeId, id);
+            return removed ? Results.NoContent() : Results.NotFound();
+        });
     }
 }
 
@@ -68,19 +89,6 @@ public record CreateTaskRequest(string TaskId, string Name);
 
 public record UpdateTaskRequest(string Name);
 
-// TODO: not yet covered here -- task assignees and task tags.
-//
-// Task assignees (Application.Tasks):
-//   GET    /tasks/{id}/assignees              -> GetTaskAssignees.Execute(taskId)
-//   POST   /tasks/{id}/assignees                -> AssignEmployeeToTask.Execute(employeeId, taskId, role)
-//   PUT    /tasks/{id}/assignees/{employeeId}   -> UpdateTaskAssigneeRole.Execute(employeeId, taskId, role)
-//   DELETE /tasks/{id}/assignees/{employeeId}   -> UnassignEmployeeFromTask.Execute(employeeId, taskId)
-//
-// Task tags (Application.Tags) -- see also API/Tags/TagsAPI.cs:
-//   GET    /tasks/{id}/tags           -> GetTaskTags.Execute(taskId)
-//   POST   /tasks/{id}/tags/{tagId}   -> TagTask.Execute(taskId, tagId)
-//   DELETE /tasks/{id}/tags/{tagId}   -> UntagTask.Execute(taskId, tagId)
-//
-// DI (program.cs): register ITaskAssigneeRepository -> TaskAssigneeRepository (AddScoped, needs
-// AppDbContext), plus AddScoped for AssignEmployeeToTask/UnassignEmployeeFromTask/GetTaskAssignees/
-// UpdateTaskAssigneeRole.
+public record AssignTaskRequest(string EmployeeId, string? Role);
+
+public record UpdateTaskAssigneeRoleRequest(string? Role);

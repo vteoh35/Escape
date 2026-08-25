@@ -1,16 +1,38 @@
-// TODO: implement Employees API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Employees):
-//   GET    /employees            -> GetEmployee.GetAll()
-//   GET    /employees/{id}       -> GetEmployee.GetById(employeeId)
-//   POST   /employees            -> CreateEmployee.Execute(employeeId, name, email)
-//   PUT    /employees/{id}       -> UpdateEmployee.Execute(employeeId, name, email)
-//   DELETE /employees/{id}       -> DeleteEmployee.Execute(employeeId)
-//
-// Consider also exposing (optional, not built yet as endpoints):
-//   PUT /employees/{id}/role -> set Employee.RoleId directly via AppDbContext, or add a small
-//   Application.Employees.AssignRole use case if you want it going through a use case class.
-//
-// DI (program.cs): register IEmployeeRepository -> EmployeeRepository (AddScoped, needs AppDbContext),
-// plus AddScoped for CreateEmployee/GetEmployee/UpdateEmployee/DeleteEmployee.
+using Application.Employees;
+
+namespace API.Employees;
+
+public static class EmployeesAPI
+{
+    public static void MapEmployeeEndpoints(this WebApplication app)
+    {
+        app.MapGet("/employees", (GetEmployee getEmployee) => Results.Ok(getEmployee.GetAll()));
+
+        app.MapGet("/employees/{id}", (string id, GetEmployee getEmployee) =>
+        {
+            var employee = getEmployee.GetById(id);
+            return employee == null ? Results.NotFound() : Results.Ok(employee);
+        });
+
+        app.MapPost("/employees", (CreateEmployeeRequest request, CreateEmployee createEmployee) =>
+        {
+            var employee = createEmployee.Execute(request.EmployeeId, request.Name, request.Email);
+            return Results.Created($"/employees/{employee.EmployeeId}", employee);
+        });
+
+        app.MapPut("/employees/{id}", (string id, UpdateEmployeeRequest request, UpdateEmployee updateEmployee) =>
+        {
+            var employee = updateEmployee.Execute(id, request.Name, request.Email);
+            return employee == null ? Results.NotFound() : Results.Ok(employee);
+        });
+
+        app.MapDelete("/employees/{id}", (string id, DeleteEmployee deleteEmployee) =>
+        {
+            var deleted = deleteEmployee.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record CreateEmployeeRequest(string EmployeeId, string Name, string Email);
+public record UpdateEmployeeRequest(string Name, string Email);

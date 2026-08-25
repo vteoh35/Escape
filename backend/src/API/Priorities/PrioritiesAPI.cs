@@ -1,16 +1,37 @@
-// TODO: implement Priorities API endpoints.
-// Follow the pattern in API/Tasks/TasksAPI.cs.
-//
-// Core CRUD (Application.Priorities):
-//   GET    /priorities            -> GetPriority.GetAll()
-//   GET    /priorities/{id}       -> GetPriority.GetById(priorityId)
-//   POST   /priorities            -> CreatePriority.Execute(priorityId, priorityName)
-//                                     (priorityId is manually assigned, not DB-generated -- caller picks it)
-//   PUT    /priorities/{id}       -> UpdatePriority.Execute(priorityId, priorityName)
-//   DELETE /priorities/{id}       -> DeletePriority.Execute(priorityId)
-//
-// This is small, mostly-static lookup data (3 seeded rows: Low/Medium/High) referenced by
-// Task.PriorityId and Project.PriorityId -- likely only needs admin-level CRUD, if any at all.
-//
-// DI (program.cs): register IPriorityRepository -> PriorityRepository (AddScoped, needs
-// AppDbContext), plus AddScoped for CreatePriority/GetPriority/UpdatePriority/DeletePriority.
+using Application.Priorities;
+
+namespace API.Priorities;
+
+public static class PrioritiesAPI
+{
+    public static void MapPriorityEndpoints(this WebApplication app)
+    {
+        app.MapGet("/priorities", (GetPriority getPriority) => Results.Ok(getPriority.GetAll()));
+
+        app.MapGet("/priorities/{id}", (int id, GetPriority getPriority) =>
+        {
+            var priority = getPriority.GetById(id);
+            return priority == null ? Results.NotFound() : Results.Ok(priority);
+        });
+
+        app.MapPost("/priorities", (PriorityRequest request, CreatePriority createPriority) =>
+        {
+            var priority = createPriority.Execute(request.PriorityId, request.PriorityName);
+            return Results.Created($"/priorities/{priority.PriorityId}", priority);
+        });
+
+        app.MapPut("/priorities/{id}", (int id, PriorityRequest request, UpdatePriority updatePriority) =>
+        {
+            var priority = updatePriority.Execute(id, request.PriorityName);
+            return priority == null ? Results.NotFound() : Results.Ok(priority);
+        });
+
+        app.MapDelete("/priorities/{id}", (int id, DeletePriority deletePriority) =>
+        {
+            var deleted = deletePriority.Execute(id);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        });
+    }
+}
+
+public record PriorityRequest(int PriorityId, string PriorityName);

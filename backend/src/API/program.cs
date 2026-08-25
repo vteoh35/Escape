@@ -1,17 +1,44 @@
 using System.Text;
+using API.ActivityLogs;
+using API.Attachments;
+using API.Authentication;
+using API.Comments;
+using API.Employees;
 using API.Middleware;
+using API.Permissions;
+using API.PositionLevels;
+using API.Priorities;
+using API.Projects;
+using API.Roles;
+using API.Statuses;
+using API.Tags;
 using API.Tasks;
+using Application.ActivityLogs;
+using Application.Attachments;
 using Application.Authentication;
 using Application.Authorization;
+using Application.Comments;
 using Application.Employees;
 using Application.Permissions;
+using Application.PositionLevels;
+using Application.Priorities;
+using Application.Projects;
 using Application.Roles;
+using Application.Statuses;
+using Application.Tags;
 using Application.Tasks;
+using Infrastructure.ActivityLogs;
+using Infrastructure.Attachments;
 using Infrastructure.Authentication;
 using Infrastructure.Authorization;
-using Infrastructure.Employees;
-using Infrastructure.Tasks;
+using Infrastructure.Comments;
 using Infrastructure.Database;
+using Infrastructure.Employees;
+using Infrastructure.Priorities;
+using Infrastructure.Projects;
+using Infrastructure.Statuses;
+using Infrastructure.Tags;
+using Infrastructure.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -34,12 +61,106 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Tasks
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-
+builder.Services.AddScoped<ITaskAssigneeRepository, TaskAssigneeRepository>();
 builder.Services.AddScoped<CreateTask>();
 builder.Services.AddScoped<GetTask>();
 builder.Services.AddScoped<UpdateTask>();
 builder.Services.AddScoped<DeleteTask>();
+builder.Services.AddScoped<AssignEmployeeToTask>();
+builder.Services.AddScoped<UnassignEmployeeFromTask>();
+builder.Services.AddScoped<GetTaskAssignees>();
+builder.Services.AddScoped<UpdateTaskAssigneeRole>();
+
+// Projects
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+builder.Services.AddScoped<CreateProject>();
+builder.Services.AddScoped<GetProject>();
+builder.Services.AddScoped<UpdateProject>();
+builder.Services.AddScoped<DeleteProject>();
+builder.Services.AddScoped<AddProjectMember>();
+builder.Services.AddScoped<RemoveProjectMember>();
+builder.Services.AddScoped<GetProjectMembers>();
+builder.Services.AddScoped<UpdateProjectMemberRole>();
+
+// Comments
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<CreateComment>();
+builder.Services.AddScoped<GetComment>();
+builder.Services.AddScoped<UpdateComment>();
+builder.Services.AddScoped<DeleteComment>();
+
+// Attachments
+builder.Services.AddScoped<IAttachmentRepository, AttachmentsRepository>();
+builder.Services.AddScoped<CreateAttachment>();
+builder.Services.AddScoped<GetAttachment>();
+builder.Services.AddScoped<UpdateAttachment>();
+builder.Services.AddScoped<DeleteAttachment>();
+
+// Tags
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<ITaskTagRepository, TaskTagRepository>();
+builder.Services.AddScoped<IProjectTagRepository, ProjectTagRepository>();
+builder.Services.AddScoped<CreateTag>();
+builder.Services.AddScoped<GetTag>();
+builder.Services.AddScoped<UpdateTag>();
+builder.Services.AddScoped<DeleteTag>();
+builder.Services.AddScoped<TagTask>();
+builder.Services.AddScoped<UntagTask>();
+builder.Services.AddScoped<GetTaskTags>();
+builder.Services.AddScoped<TagProject>();
+builder.Services.AddScoped<UntagProject>();
+builder.Services.AddScoped<GetProjectTags>();
+
+// Activity logs
+builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+builder.Services.AddScoped<CreateActivityLog>();
+builder.Services.AddScoped<GetActivityLog>();
+builder.Services.AddScoped<UpdateActivityLog>();
+builder.Services.AddScoped<DeleteActivityLog>();
+
+// Priorities / Statuses / Position levels (lookup tables)
+builder.Services.AddScoped<IPriorityRepository, PriorityRepository>();
+builder.Services.AddScoped<CreatePriority>();
+builder.Services.AddScoped<GetPriority>();
+builder.Services.AddScoped<UpdatePriority>();
+builder.Services.AddScoped<DeletePriority>();
+
+builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+builder.Services.AddScoped<CreateStatus>();
+builder.Services.AddScoped<GetStatus>();
+builder.Services.AddScoped<UpdateStatus>();
+builder.Services.AddScoped<DeleteStatus>();
+
+builder.Services.AddScoped<IPositionLevelRepository, PositionLevelRepository>();
+builder.Services.AddScoped<CreatePositionLevel>();
+builder.Services.AddScoped<GetPositionLevel>();
+builder.Services.AddScoped<UpdatePositionLevel>();
+builder.Services.AddScoped<DeletePositionLevel>();
+
+// Roles
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<CreateRole>();
+builder.Services.AddScoped<GetRole>();
+builder.Services.AddScoped<UpdateRole>();
+builder.Services.AddScoped<DeleteRole>();
+builder.Services.AddScoped<AssignPermissionToRole>();
+builder.Services.AddScoped<RemovePermissionFromRole>();
+builder.Services.AddScoped<GetRolePermissions>();
+
+// Permissions
+builder.Services.AddScoped<CreatePermission>();
+builder.Services.AddScoped<GetPermission>();
+builder.Services.AddScoped<UpdatePermission>();
+builder.Services.AddScoped<DeletePermission>();
+
+// Employees
+builder.Services.AddScoped<CreateEmployee>();
+builder.Services.AddScoped<GetEmployee>();
+builder.Services.AddScoped<UpdateEmployee>();
+builder.Services.AddScoped<DeleteEmployee>();
 
 // Authentication (JWT) and authorization (permission-based)
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -75,6 +196,7 @@ builder.Services.AddScoped<Login>();
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 app.UseCors("Frontend");
 
@@ -84,34 +206,20 @@ app.UseAuthorization();
 app.MapGet("/", () => "Escape API is running");
 
 app.MapTaskEndpoints();
+app.MapProjectEndpoints();
+app.MapEmployeeEndpoints();
+app.MapCommentEndpoints();
+app.MapAttachmentEndpoints();
+app.MapTagEndpoints();
+app.MapAuthenticationEndpoints();
+app.MapActivityLogEndpoints();
+app.MapRoleEndpoints();
+app.MapPermissionEndpoints();
+app.MapPriorityEndpoints();
+app.MapStatusEndpoints();
+app.MapPositionLevelEndpoints();
 
-// TODO: as each *API.cs file above gets implemented, register its DI services above (repositories
-// as AddScoped, they all take AppDbContext; use case classes as AddScoped too) and call its
-// Map*Endpoints() extension method here, same as MapTaskEndpoints(). Files still needing this:
-//   API/Projects/ProjectsAPI.cs
-//   API/Employees/EmployeesAPI.cs
-//   API/Comments/CommentsAPI.cs
-//   API/Attachments/AttachmentsAPI.cs
-//   API/Tags/TagsAPI.cs
-//   API/Authentication/AuthenticationAPI.cs
-//   API/ActivityLogs/ActivityLogsAPI.cs
-//   API/Roles/RolesAPI.cs
-//   API/Permissions/PermissionsAPI.cs
-//   API/Priorities/PrioritiesAPI.cs
-//   API/Statuses/StatusesAPI.cs
-//   API/PositionLevels/PositionLevelsAPI.cs
-//   API/Tasks/TasksAPI.cs (assignees + tags -- see TODO at the bottom of that file)
-//
-// TODO: wire up remaining middleware (see TODO in the file for details):
-//   app.UseMiddleware<LoggingMiddleware>()
-//
-// Exception handling is already wired above (ExceptionMiddleware, first in the pipeline) -- any
-// unhandled exception anywhere downstream (including in auth/EF/your endpoints) becomes a generic
-// 500 JSON response instead of leaking a stack trace. It currently returns the same generic message
-// for every exception type; see the TODO in ExceptionMiddleware.cs if you want specific exception
-// types mapped to specific status codes later (e.g. a "not found" domain exception -> 404).
-//
-// Authentication/authorization is already wired above. To require a valid token on a route:
+// Every route above is unauthenticated by default. To require a valid token on a route:
 //   app.MapPost("/projects", ...).RequireAuthorization();
 // To require a specific permission (checked via GetEmployeePermissions against the caller's
 // Employee.RoleId -> RolePermissions -> Permission.PermissionName):
@@ -119,6 +227,7 @@ app.MapTaskEndpoints();
 //       .RequireAuthorization(policy => policy.Requirements.Add(new PermissionRequirement("delete_project")));
 //   (PermissionRequirement is in Infrastructure.Authorization -- add a `using` for it.)
 // The permission name is just whatever string you created via CreatePermission -- there's no
-// fixed enum of permissions, they're rows in the permission table.
+// fixed enum of permissions, they're rows in the permission table. Deciding which routes need
+// which permissions is a product decision, not made here -- left open intentionally.
 
 app.Run();
