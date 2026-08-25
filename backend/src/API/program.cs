@@ -214,13 +214,6 @@ app.UseAuthorization();
 
 app.MapGet("/", () => "Escape API is running");
 
-// TEMPORARY -- remove once CORS config is confirmed working.
-app.MapGet("/debug/cors", (IConfiguration config) => new
-{
-    raw = config["Cors:AdditionalOrigins"],
-    allowedOrigins
-});
-
 app.MapTaskEndpoints();
 app.MapProjectEndpoints();
 app.MapEmployeeEndpoints();
