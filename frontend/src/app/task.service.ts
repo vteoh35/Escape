@@ -30,9 +30,10 @@ export class TaskService {
   }
 
   createTask(name: string): Observable<TaskItem> {
-    // Task ids are manually assigned (not DB-generated), so the client picks one.
+    // Task ids are manually assigned (not DB-generated) and the column is varchar(10),
+    // so a full crypto.randomUUID() (36 chars) doesn't fit -- use a short id instead.
     const task: TaskItem = {
-      taskId: crypto.randomUUID(),
+      taskId: crypto.randomUUID().replace(/-/g, '').slice(0, 10).toUpperCase(),
       name
     };
 
