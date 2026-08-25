@@ -17,22 +17,16 @@
 
   <div class="tasks">
 
-    @for (task of tasks; track task.id) {
+    @for (task of tasks; track task.taskId) {
 
       <div class="task">
-        <input
-          type="checkbox"
-          [checked]="task.isCompleted"
-          (change)="toggleTask(task)"
-        />
-
-        <span [class.completed]="task.isCompleted">
+        <span>
           {{ task.name }}
         </span>
 
         <button
           class="delete"
-          (click)="deleteTask(task.id)"
+          (click)="deleteTask(task.taskId)"
         >
           Delete
         </button>

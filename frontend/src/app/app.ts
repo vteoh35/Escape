@@ -36,15 +36,9 @@ export class App implements OnInit {
     });
   }
 
-  toggleTask(task: TaskItem): void {
-    task.isCompleted = !task.isCompleted;
-
-    this.taskService.updateTask(task).subscribe();
-  }
-
-  deleteTask(id: number): void {
-    this.taskService.deleteTask(id).subscribe(() => {
-      this.tasks = this.tasks.filter(task => task.id !== id);
+  deleteTask(taskId: string): void {
+    this.taskService.deleteTask(taskId).subscribe(() => {
+      this.tasks = this.tasks.filter(task => task.taskId !== taskId);
     });
   }
 }
