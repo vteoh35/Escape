@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore
+      run: dotnet restore escape.sln
+
+    - name: Build
+      run: dotnet build escape.sln --configuration Release --no-restore
+
+    # UnitTests/ApiTests aren't wired up yet (empty project shells, not in escape.sln --
+    # see backend/docs/TODO_testing.md). This is a no-op until that lands, kept here so it
+    # starts running automatically once real tests exist.
+    - name: Test
+      run: dotnet test escape.sln --configuration Release --no-build
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Test
+      run: npm test -- --watch=false
+
+    - name: Build
+      run: npm run build
