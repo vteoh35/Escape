@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskItem, TaskService } from './task.service';
 
@@ -12,7 +12,7 @@ export class App implements OnInit {
 
   private taskService = inject(TaskService);
 
-  tasks: TaskItem[] = [];
+  tasks = signal<TaskItem[]>([]);
   newTaskName = '';
 
   ngOnInit(): void {
@@ -21,7 +21,7 @@ export class App implements OnInit {
 
   loadTasks(): void {
     this.taskService.getTasks().subscribe(tasks => {
-      this.tasks = tasks;
+      this.tasks.set(tasks);
     });
   }
 
@@ -31,14 +31,14 @@ export class App implements OnInit {
     }
 
     this.taskService.createTask(this.newTaskName).subscribe(task => {
-      this.tasks.push(task);
+      this.tasks.update(tasks => [...tasks, task]);
       this.newTaskName = '';
     });
   }
 
   deleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe(() => {
-      this.tasks = this.tasks.filter(task => task.taskId !== taskId);
+      this.tasks.update(tasks => tasks.filter(task => task.taskId !== taskId));
     });
   }
 }
