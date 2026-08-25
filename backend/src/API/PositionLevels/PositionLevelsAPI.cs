@@ -18,19 +18,19 @@ public static class PositionLevelsAPI
         {
             var positionLevel = createPositionLevel.Execute(request.Level, request.Position);
             return Results.Created($"/position-levels/{positionLevel.Level}", positionLevel);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/position-levels/{level}", (int level, PositionLevelRequest request, UpdatePositionLevel updatePositionLevel) =>
         {
             var positionLevel = updatePositionLevel.Execute(level, request.Position);
             return positionLevel == null ? Results.NotFound() : Results.Ok(positionLevel);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/position-levels/{level}", (int level, DeletePositionLevel deletePositionLevel) =>
         {
             var deleted = deletePositionLevel.Execute(level);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

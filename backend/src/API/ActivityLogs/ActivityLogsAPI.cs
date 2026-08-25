@@ -18,19 +18,19 @@ public static class ActivityLogsAPI
         {
             var log = createActivityLog.Execute(request.LogId, request.Description, request.ProjectId, request.TaskId, request.EmployeeId);
             return Results.Created($"/activity-logs/{log.LogId}", log);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/activity-logs/{id}", (string id, UpdateActivityLogRequest request, UpdateActivityLog updateActivityLog) =>
         {
             var log = updateActivityLog.Execute(id, request.Description);
             return log == null ? Results.NotFound() : Results.Ok(log);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/activity-logs/{id}", (string id, DeleteActivityLog deleteActivityLog) =>
         {
             var deleted = deleteActivityLog.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

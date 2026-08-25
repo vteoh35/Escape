@@ -2,18 +2,53 @@
   <h1>Escape</h1>
   <h2>Tasks</h2>
 
-  <div class="add-task">
-    <input
-      type="text"
-      [(ngModel)]="newTaskName"
-      placeholder="Enter a task"
-      (keyup.enter)="addTask()"
-    />
+  <div class="auth">
+    @if (auth.isLoggedIn()) {
 
-    <button (click)="addTask()">
-      Add Task
-    </button>
+      <span>Logged in as {{ auth.employeeId() }}</span>
+      <button (click)="logout()">Log out</button>
+
+    } @else {
+
+      <input
+        type="text"
+        [(ngModel)]="loginEmployeeId"
+        placeholder="Employee ID"
+        (keyup.enter)="login()"
+      />
+
+      <input
+        type="password"
+        [(ngModel)]="loginPassword"
+        placeholder="Password"
+        (keyup.enter)="login()"
+      />
+
+      <button (click)="login()">Log in</button>
+
+      @if (loginError) {
+        <p class="auth-error">{{ loginError }}</p>
+      }
+
+    }
   </div>
+
+  @if (auth.isLoggedIn()) {
+
+    <div class="add-task">
+      <input
+        type="text"
+        [(ngModel)]="newTaskName"
+        placeholder="Enter a task"
+        (keyup.enter)="addTask()"
+      />
+
+      <button (click)="addTask()">
+        Add Task
+      </button>
+    </div>
+
+  }
 
   <div class="tasks">
 
@@ -24,12 +59,14 @@
           {{ task.name }}
         </span>
 
-        <button
-          class="delete"
-          (click)="deleteTask(task.taskId)"
-        >
-          Delete
-        </button>
+        @if (auth.isLoggedIn()) {
+          <button
+            class="delete"
+            (click)="deleteTask(task.taskId)"
+          >
+            Delete
+          </button>
+        }
       </div>
 
     } @empty {

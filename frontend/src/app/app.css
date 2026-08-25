@@ -50,6 +50,58 @@ h2 {
   color: rgba(255, 255, 255, 0.75);
 }
 
+.auth {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  font-size: 0.85rem;
+}
+
+.auth span {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.auth input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #1d1d1f;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.auth input::placeholder {
+  color: rgba(30, 30, 30, 0.5);
+}
+
+.auth button {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(120, 140, 255, 0.9), rgba(150, 100, 230, 0.85));
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.auth-error {
+  width: 100%;
+  margin: 0;
+  color: #ffb3b3;
+  font-size: 0.8rem;
+}
+
 .add-task {
   display: flex;
   gap: 0.6rem;

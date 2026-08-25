@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskItem, TaskService } from './task.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,14 @@ import { TaskItem, TaskService } from './task.service';
 export class App implements OnInit {
 
   private taskService = inject(TaskService);
+  auth = inject(AuthService);
 
   tasks = signal<TaskItem[]>([]);
   newTaskName = '';
+
+  loginEmployeeId = '';
+  loginPassword = '';
+  loginError = '';
 
   ngOnInit(): void {
     this.loadTasks();
@@ -40,5 +46,23 @@ export class App implements OnInit {
     this.taskService.deleteTask(taskId).subscribe(() => {
       this.tasks.update(tasks => tasks.filter(task => task.taskId !== taskId));
     });
+  }
+
+  login(): void {
+    this.loginError = '';
+
+    this.auth.login(this.loginEmployeeId, this.loginPassword).subscribe({
+      next: () => {
+        this.loginEmployeeId = '';
+        this.loginPassword = '';
+      },
+      error: () => {
+        this.loginError = 'Login failed. Check your employee ID and password.';
+      }
+    });
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 }

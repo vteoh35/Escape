@@ -18,19 +18,19 @@ public static class StatusesAPI
         {
             var status = createStatus.Execute(request.StatusId, request.StatusName);
             return Results.Created($"/statuses/{status.StatusId}", status);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/statuses/{id}", (int id, StatusRequest request, UpdateStatus updateStatus) =>
         {
             var status = updateStatus.Execute(id, request.StatusName);
             return status == null ? Results.NotFound() : Results.Ok(status);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/statuses/{id}", (int id, DeleteStatus deleteStatus) =>
         {
             var deleted = deleteStatus.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

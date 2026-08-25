@@ -18,19 +18,19 @@ public static class CommentsAPI
         {
             var comment = createComment.Execute(request.CommentId, request.Description, request.TaskId, request.EmployeeId);
             return Results.Created($"/comments/{comment.CommentId}", comment);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/comments/{id}", (string id, UpdateCommentRequest request, UpdateComment updateComment) =>
         {
             var comment = updateComment.Execute(id, request.Description);
             return comment == null ? Results.NotFound() : Results.Ok(comment);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/comments/{id}", (string id, DeleteComment deleteComment) =>
         {
             var deleted = deleteComment.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

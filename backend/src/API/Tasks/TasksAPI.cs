@@ -31,7 +31,7 @@ public static class TasksAPI
             var task = createTask.Execute(request.TaskId, request.Name);
 
             return Results.Created($"/tasks/{task.TaskId}", task);
-        });
+        }).RequireAuthorization();
 
         // Update a task
         app.MapPut("/tasks/{taskId}", (
@@ -47,7 +47,7 @@ public static class TasksAPI
             }
 
             return Results.Ok(task);
-        });
+        }).RequireAuthorization();
 
         // Delete a task
         app.MapDelete("/tasks/{taskId}", (string taskId, DeleteTask deleteTask) =>
@@ -60,7 +60,7 @@ public static class TasksAPI
             }
 
             return Results.NoContent();
-        });
+        }).RequireAuthorization();
 
         app.MapGet("/tasks/{id}/assignees", (string id, GetTaskAssignees getTaskAssignees) =>
             Results.Ok(getTaskAssignees.Execute(id)));
@@ -69,19 +69,19 @@ public static class TasksAPI
         {
             var assignee = assignEmployeeToTask.Execute(request.EmployeeId, id, request.Role);
             return Results.Created($"/tasks/{id}/assignees/{request.EmployeeId}", assignee);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/tasks/{id}/assignees/{employeeId}", (string id, string employeeId, UpdateTaskAssigneeRoleRequest request, UpdateTaskAssigneeRole updateRole) =>
         {
             var assignee = updateRole.Execute(employeeId, id, request.Role);
             return assignee == null ? Results.NotFound() : Results.Ok(assignee);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/tasks/{id}/assignees/{employeeId}", (string id, string employeeId, UnassignEmployeeFromTask unassign) =>
         {
             var removed = unassign.Execute(employeeId, id);
             return removed ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

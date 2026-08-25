@@ -18,19 +18,19 @@ public static class AttachmentsAPI
         {
             var attachment = createAttachment.Execute(request.AttachmentId, request.AttachmentLocation, request.ProjectId, request.TaskId);
             return Results.Created($"/attachments/{attachment.AttachmentId}", attachment);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/attachments/{id}", (string id, UpdateAttachmentRequest request, UpdateAttachment updateAttachment) =>
         {
             var attachment = updateAttachment.Execute(id, request.AttachmentLocation);
             return attachment == null ? Results.NotFound() : Results.Ok(attachment);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/attachments/{id}", (string id, DeleteAttachment deleteAttachment) =>
         {
             var deleted = deleteAttachment.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

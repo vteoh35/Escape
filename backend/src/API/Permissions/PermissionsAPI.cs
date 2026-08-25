@@ -18,19 +18,19 @@ public static class PermissionsAPI
         {
             var permission = createPermission.Execute(request.PermissionName);
             return Results.Created($"/permissions/{permission.PermissionId}", permission);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/permissions/{id}", (int id, CreatePermissionRequest request, UpdatePermission updatePermission) =>
         {
             var permission = updatePermission.Execute(id, request.PermissionName);
             return permission == null ? Results.NotFound() : Results.Ok(permission);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/permissions/{id}", (int id, DeletePermission deletePermission) =>
         {
             var deleted = deletePermission.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

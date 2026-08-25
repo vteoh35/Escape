@@ -18,19 +18,19 @@ public static class TagsAPI
         {
             var tag = createTag.Execute(request.TagName);
             return Results.Created($"/tags/{tag.TagId}", tag);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/tags/{id}", (int id, CreateTagRequest request, UpdateTag updateTag) =>
         {
             var tag = updateTag.Execute(id, request.TagName);
             return tag == null ? Results.NotFound() : Results.Ok(tag);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/tags/{id}", (int id, DeleteTag deleteTag) =>
         {
             var deleted = deleteTag.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
 
         app.MapGet("/tasks/{id}/tags", (string id, GetTaskTags getTaskTags) =>
             Results.Ok(getTaskTags.Execute(id)));
@@ -39,13 +39,13 @@ public static class TagsAPI
         {
             var taskTag = tagTask.Execute(id, tagId);
             return Results.Created($"/tasks/{id}/tags/{tagId}", taskTag);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/tasks/{id}/tags/{tagId}", (string id, int tagId, UntagTask untagTask) =>
         {
             var removed = untagTask.Execute(id, tagId);
             return removed ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

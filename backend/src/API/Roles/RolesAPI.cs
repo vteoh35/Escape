@@ -18,19 +18,19 @@ public static class RolesAPI
         {
             var role = createRole.Execute(request.RoleName);
             return Results.Created($"/roles/{role.RoleId}", role);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/roles/{id}", (int id, CreateRoleRequest request, UpdateRole updateRole) =>
         {
             var role = updateRole.Execute(id, request.RoleName);
             return role == null ? Results.NotFound() : Results.Ok(role);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/roles/{id}", (int id, DeleteRole deleteRole) =>
         {
             var deleted = deleteRole.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
 
         app.MapGet("/roles/{id}/permissions", (int id, GetRolePermissions getRolePermissions) =>
             Results.Ok(getRolePermissions.Execute(id)));
@@ -39,13 +39,13 @@ public static class RolesAPI
         {
             var rolePermission = assign.Execute(id, permissionId);
             return Results.Created($"/roles/{id}/permissions/{permissionId}", rolePermission);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/roles/{id}/permissions/{permissionId}", (int id, int permissionId, RemovePermissionFromRole remove) =>
         {
             var removed = remove.Execute(id, permissionId);
             return removed ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

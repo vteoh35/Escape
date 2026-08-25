@@ -18,19 +18,19 @@ public static class PrioritiesAPI
         {
             var priority = createPriority.Execute(request.PriorityId, request.PriorityName);
             return Results.Created($"/priorities/{priority.PriorityId}", priority);
-        });
+        }).RequireAuthorization();
 
         app.MapPut("/priorities/{id}", (int id, PriorityRequest request, UpdatePriority updatePriority) =>
         {
             var priority = updatePriority.Execute(id, request.PriorityName);
             return priority == null ? Results.NotFound() : Results.Ok(priority);
-        });
+        }).RequireAuthorization();
 
         app.MapDelete("/priorities/{id}", (int id, DeletePriority deletePriority) =>
         {
             var deleted = deletePriority.Execute(id);
             return deleted ? Results.NoContent() : Results.NotFound();
-        });
+        }).RequireAuthorization();
     }
 }
 

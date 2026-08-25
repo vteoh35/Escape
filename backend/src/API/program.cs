@@ -228,10 +228,11 @@ app.MapPriorityEndpoints();
 app.MapStatusEndpoints();
 app.MapPositionLevelEndpoints();
 
-// Every route above is unauthenticated by default. To require a valid token on a route:
-//   app.MapPost("/projects", ...).RequireAuthorization();
-// To require a specific permission (checked via GetEmployeePermissions against the caller's
-// Employee.RoleId -> RolePermissions -> Permission.PermissionName):
+// Every POST/PUT/DELETE route (except /auth/login and /auth/register, which obviously can't
+// require a token) now calls .RequireAuthorization() -- a valid JWT is required, but no specific
+// permission check yet. GET routes stay public/unauthenticated.
+// To tighten a route to a specific permission instead of "any authenticated user" (checked via
+// GetEmployeePermissions against the caller's Employee.RoleId -> RolePermissions -> Permission.PermissionName):
 //   app.MapDelete("/projects/{id}", ...)
 //       .RequireAuthorization(policy => policy.Requirements.Add(new PermissionRequirement("delete_project")));
 //   (PermissionRequirement is in Infrastructure.Authorization -- add a `using` for it.)
