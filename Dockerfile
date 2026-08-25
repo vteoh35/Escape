@@ -24,6 +24,9 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 ENV ASPNETCORE_ENVIRONMENT=Production
+# Render's containers have a very low inotify limit; ASP.NET Core's default JSON config
+# file-watcher uses inotify and crashes the app on startup if this isn't disabled.
+ENV DOTNET_hostBuilder__reloadConfigOnChange=false
 EXPOSE 8080
 
 # Render injects $PORT at runtime; fall back to 8080 for local `docker run` testing. Shell-form
