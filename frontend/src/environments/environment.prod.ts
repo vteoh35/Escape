@@ -1,5 +1,4 @@
-// Used for production builds (npm run build). Update apiUrl once the backend is deployed on
-// Render -- Render assigns the URL after the first deploy, so this starts as a placeholder.
+// Used for production builds (npm run build).
 export const environment = {
-  apiUrl: 'https://REPLACE-WITH-YOUR-RENDER-URL.onrender.com'
+  apiUrl: 'https://escape-43af.onrender.com'
 };
