@@ -46,13 +46,22 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Allow Angular frontend to call this API
+// Allow the Angular frontend to call this API. localhost:4200 always works for local dev;
+// the deployed frontend origin (e.g. a Netlify URL) is added via the Cors:AdditionalOrigins
+// config value (comma-separated) so it doesn't need a code change/redeploy to update.
+var allowedOrigins = new List<string> { "http://localhost:4200" };
+var additionalOrigins = builder.Configuration["Cors:AdditionalOrigins"];
+if (!string.IsNullOrWhiteSpace(additionalOrigins))
+{
+    allowedOrigins.AddRange(additionalOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200")
+            .WithOrigins(allowedOrigins.ToArray())
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
