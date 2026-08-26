@@ -56,3 +56,15 @@ jobs:
 
     - name: Build
       run: npm run build
+
+  deploy:
+    needs: [ backend, frontend ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Render deploy (backend)
+      run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+    - name: Trigger Netlify deploy (frontend)
+      run: curl -fsS -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}"
