@@ -113,8 +113,9 @@ Status, PositionLevel) uses a manually-assigned id, so the client provides it.
   since including them breaks the build. See `docs/TODO_testing.md`.
 - **Production configuration** -- only local dev config exists (`appsettings.Development.json`,
   gitignored). See `docs/TODO_production_config.md`.
-- **Deployment** -- CI (`.github/workflows/ci.yml`) builds and tests `escape.sln` on push/PR, but
-  there's no Dockerfile, no CD, no hosting decided. See `docs/TODO_deployment.md`.
+- **Deployment** -- CI/CD (`.github/workflows/cicd.yml`) builds and tests `escape.sln` on push/PR
+  and deploys to Render (backend) + Netlify (frontend) on merge to `main`. Still missing: automated
+  DB migrations as part of the deploy, and a health check endpoint. See `docs/TODO_deployment.md`.
 - **Frontend integration** -- in progress on the frontend side against `mock-api/` (see
   `frontend/src/environments/environment.ts`); the real backend endpoints above now exist for every
   feature, not just Tasks, so the frontend can be pointed at the real backend (`http://localhost:5052`)
