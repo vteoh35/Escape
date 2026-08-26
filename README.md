@@ -56,5 +56,5 @@ Switch `apiUrl` in `environment.ts` to `http://localhost:5052` once your local b
 ## Workflow
 
 - Don't push straight to `main` for anything beyond a trivial fix — branch, push, open a PR. Keeps two people from clobbering each other's work and gives CI a chance to catch problems before they land.
-- CI (`.github/workflows/ci.yml`) runs on every push/PR: builds and tests both the backend and the frontend.
+- CI/CD (`.github/workflows/cicd.yml`) runs on every push/PR: builds and tests both the backend and the frontend. On a push to `main`, once both pass, it also triggers deploys to Render (backend) and Netlify (frontend) via their deploy hooks.
 - Real secrets never go in git, gitignored file or not — `dotnet user-secrets` only (step 3 above).
