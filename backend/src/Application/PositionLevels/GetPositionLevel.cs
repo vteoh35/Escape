@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.PositionLevels;
 
+/// <summary>
+/// Reads position levels, either all of them or by level.
+/// </summary>
 public class GetPositionLevel
 {
     private readonly IPositionLevelRepository _positionLevelRepository;

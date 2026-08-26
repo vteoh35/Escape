@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Permissions;
 
+/// <summary>
+/// Reads permissions, either all of them or by id.
+/// </summary>
 public class GetPermission
 {
     private readonly IPermissionRepository _permissionRepository;

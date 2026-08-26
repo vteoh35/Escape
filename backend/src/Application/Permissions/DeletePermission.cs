@@ -1,5 +1,8 @@
 namespace Application.Permissions;
 
+/// <summary>
+/// Deletes a permission. Returns false if the id doesn't exist.
+/// </summary>
 public class DeletePermission
 {
     private readonly IPermissionRepository _permissionRepository;

@@ -12,6 +12,12 @@ using Business_Logic.Tags;
 
 namespace Infrastructure.Database;
 
+/// <summary>
+/// EF Core context for the whole app. Maps onto a hand-built Postgres schema (snake_case table/
+/// column names) that predates EF Core, via Fluent API configuration below -- entity class
+/// properties stay PascalCase C#; only this mapping is schema-aware. Don't rename entity
+/// properties to "match" the database -- add/adjust the mapping instead.
+/// </summary>
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}

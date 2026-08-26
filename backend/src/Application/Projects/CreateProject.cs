@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Creates a new project.
+/// </summary>
 public class CreateProject
 {
     private readonly IProjectRepository _projectRepository;

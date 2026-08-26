@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Roles;
 
+/// <summary>
+/// Creates a new role. RoleId is database-generated, so callers only supply the name.
+/// </summary>
 public class CreateRole
 {
     private readonly IRoleRepository _roleRepository;

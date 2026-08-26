@@ -1,5 +1,8 @@
 namespace Application.Statuses;
 
+/// <summary>
+/// Deletes a status. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteStatus
 {
     private readonly IStatusRepository _statusRepository;

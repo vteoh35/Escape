@@ -1,5 +1,8 @@
 namespace Application.ActivityLogs;
 
+/// <summary>
+/// Deletes an activity log entry. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteActivityLog
 {
     private readonly IActivityLogRepository _activityLogRepository;

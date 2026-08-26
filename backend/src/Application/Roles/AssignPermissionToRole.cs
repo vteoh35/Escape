@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Roles;
 
+/// <summary>
+/// Grants a permission to a role.
+/// </summary>
 public class AssignPermissionToRole
 {
     private readonly IRolePermissionRepository _rolePermissionRepository;

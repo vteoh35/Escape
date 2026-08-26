@@ -1,5 +1,8 @@
 namespace Application.Tasks;
 
+/// <summary>
+/// Deletes a task. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteTask
 {
     private readonly ITaskRepository _taskRepository;

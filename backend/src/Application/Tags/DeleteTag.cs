@@ -1,5 +1,8 @@
 namespace Application.Tags;
 
+/// <summary>
+/// Deletes a tag. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteTag
 {
     private readonly ITagRepository _tagRepository;

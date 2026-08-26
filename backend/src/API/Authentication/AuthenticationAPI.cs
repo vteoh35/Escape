@@ -2,6 +2,9 @@ using Application.Authentication;
 
 namespace API.Authentication;
 
+/// <summary>
+/// Login/registration endpoints: /auth/register, /auth/login.
+/// </summary>
 public static class AuthenticationAPI
 {
     public static void MapAuthenticationEndpoints(this WebApplication app)

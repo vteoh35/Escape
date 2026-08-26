@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Employees;
 
+/// <summary>
+/// EF Core-backed implementation of IPositionLevelRepository.
+/// </summary>
 public class PositionLevelRepository : IPositionLevelRepository
 {
     private readonly AppDbContext _context;

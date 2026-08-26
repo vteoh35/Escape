@@ -2,6 +2,9 @@ using Application.PositionLevels;
 
 namespace API.PositionLevels;
 
+/// <summary>
+/// Position level endpoints: /position-levels.
+/// </summary>
 public static class PositionLevelsAPI
 {
     public static void MapPositionLevelEndpoints(this WebApplication app)

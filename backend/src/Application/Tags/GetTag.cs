@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Reads tags, either all of them or by id.
+/// </summary>
 public class GetTag
 {
     private readonly ITagRepository _tagRepository;

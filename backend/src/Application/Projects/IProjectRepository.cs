@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Data access contract for Projects, implemented in Infrastructure against Postgres.
+/// </summary>
 public interface IProjectRepository
 {
     List<Project> GetAll();

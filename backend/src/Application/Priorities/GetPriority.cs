@@ -2,6 +2,9 @@ using Business_Logic.Priorities;
 
 namespace Application.Priorities;
 
+/// <summary>
+/// Reads priorities, either all of them or by id.
+/// </summary>
 public class GetPriority
 {
     private readonly IPriorityRepository _priorityRepository;

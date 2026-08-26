@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Attachments;
 
+/// <summary>
+/// EF Core-backed implementation of IAttachmentRepository.
+/// </summary>
 public class AttachmentsRepository : IAttachmentRepository
 {
     private readonly AppDbContext _context;

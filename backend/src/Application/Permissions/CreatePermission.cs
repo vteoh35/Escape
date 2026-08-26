@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Permissions;
 
+/// <summary>
+/// Creates a new permission. PermissionId is database-generated, so callers only supply the name.
+/// </summary>
 public class CreatePermission
 {
     private readonly IPermissionRepository _permissionRepository;

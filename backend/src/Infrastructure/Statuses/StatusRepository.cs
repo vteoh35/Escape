@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Statuses;
 
+/// <summary>
+/// EF Core-backed implementation of IStatusRepository.
+/// </summary>
 public class StatusRepository : IStatusRepository
 {
     private readonly AppDbContext _context;

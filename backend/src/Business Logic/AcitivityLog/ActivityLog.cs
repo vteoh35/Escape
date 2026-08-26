@@ -1,5 +1,8 @@
 namespace Business_Logic.ActivityLogs;
 
+/// <summary>
+/// An audit-trail entry recording a notable action against a project, task, and/or employee.
+/// </summary>
 public class ActivityLog
 {
     public string LogId { get; set; }

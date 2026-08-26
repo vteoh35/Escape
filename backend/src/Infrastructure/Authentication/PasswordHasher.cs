@@ -3,6 +3,9 @@ using Application.Authentication;
 
 namespace Infrastructure.Authentication;
 
+/// <summary>
+/// PBKDF2 password hashing (100,000 iterations, SHA-256). Stores iteration count, salt, and hash together as a single string so verification is self-describing.
+/// </summary>
 public class PasswordHasher : IPasswordHasher
 {
     private const int SaltSize = 16;

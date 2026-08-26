@@ -1,5 +1,8 @@
 namespace Application.Projects;
 
+/// <summary>
+/// Deletes a project. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteProject
 {
     private readonly IProjectRepository _projectRepository;

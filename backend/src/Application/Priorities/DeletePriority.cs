@@ -1,5 +1,8 @@
 namespace Application.Priorities;
 
+/// <summary>
+/// Deletes a priority. Returns false if the id doesn't exist.
+/// </summary>
 public class DeletePriority
 {
     private readonly IPriorityRepository _priorityRepository;

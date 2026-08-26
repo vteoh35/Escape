@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Lists the tags applied to a task.
+/// </summary>
 public class GetTaskTags
 {
     private readonly ITaskTagRepository _taskTagRepository;

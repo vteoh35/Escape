@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Lists the members of a project.
+/// </summary>
 public class GetProjectMembers
 {
     private readonly IProjectMemberRepository _projectMemberRepository;

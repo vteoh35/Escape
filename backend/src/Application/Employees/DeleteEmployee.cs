@@ -1,5 +1,8 @@
 namespace Application.Employees;
 
+/// <summary>
+/// Deletes an employee. Returns false if the id doesn't exist. Will fail at the database level if the employee still has dependent rows (e.g. an Authentication record).
+/// </summary>
 public class DeleteEmployee
 {
     private readonly IEmployeeRepository _employeeRepository;

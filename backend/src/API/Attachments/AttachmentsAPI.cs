@@ -2,6 +2,9 @@ using Application.Attachments;
 
 namespace API.Attachments;
 
+/// <summary>
+/// Attachment endpoints: /attachments.
+/// </summary>
 public static class AttachmentsAPI
 {
     public static void MapAttachmentEndpoints(this WebApplication app)

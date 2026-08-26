@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Projects;
 
+/// <summary>
+/// EF Core-backed implementation of IProjectMemberRepository.
+/// </summary>
 public class ProjectMemberRepository : IProjectMemberRepository
 {
     private readonly AppDbContext _context;

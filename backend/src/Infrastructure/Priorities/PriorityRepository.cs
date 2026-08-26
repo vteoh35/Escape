@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Priorities;
 
+/// <summary>
+/// EF Core-backed implementation of IPriorityRepository.
+/// </summary>
 public class PriorityRepository : IPriorityRepository
 {
     private readonly AppDbContext _context;

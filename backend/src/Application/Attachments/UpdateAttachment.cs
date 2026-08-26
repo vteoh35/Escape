@@ -2,6 +2,9 @@ using Business_Logic.Attachments;
 
 namespace Application.Attachments;
 
+/// <summary>
+/// Updates an attachment's location. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateAttachment
 {
     private readonly IAttachmentRepository _attachmentRepository;

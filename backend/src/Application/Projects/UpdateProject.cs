@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Updates a project's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateProject
 {
     private readonly IProjectRepository _projectRepository;

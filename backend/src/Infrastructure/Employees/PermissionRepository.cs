@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Employees;
 
+/// <summary>
+/// EF Core-backed implementation of IPermissionRepository.
+/// </summary>
 public class PermissionRepository : IPermissionRepository
 {
     private readonly AppDbContext _context;

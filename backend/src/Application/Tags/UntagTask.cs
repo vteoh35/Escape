@@ -1,5 +1,8 @@
 namespace Application.Tags;
 
+/// <summary>
+/// Removes a tag from a task. Returns false if it wasn't applied.
+/// </summary>
 public class UntagTask
 {
     private readonly ITaskTagRepository _taskTagRepository;

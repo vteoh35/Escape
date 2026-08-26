@@ -2,6 +2,9 @@ using Application.Tasks;
 
 namespace API.Tasks;
 
+/// <summary>
+/// Task endpoints: /tasks, plus task assignee and task tagging sub-resources.
+/// </summary>
 public static class TasksAPI
 {
     public static void MapTaskEndpoints(this WebApplication app)

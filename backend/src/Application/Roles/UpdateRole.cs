@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Roles;
 
+/// <summary>
+/// Updates a role's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateRole
 {
     private readonly IRoleRepository _roleRepository;

@@ -2,6 +2,9 @@ using Business_Logic.ActivityLogs;
 
 namespace Application.ActivityLogs;
 
+/// <summary>
+/// Records a new activity log entry. LogTime is stamped automatically -- callers don't supply it.
+/// </summary>
 public class CreateActivityLog
 {
     private readonly IActivityLogRepository _activityLogRepository;

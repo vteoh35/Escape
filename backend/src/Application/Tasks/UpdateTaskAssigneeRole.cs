@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Updates an assignee's role label on a task. Returns null if the employee isn't assigned to it.
+/// </summary>
 public class UpdateTaskAssigneeRole
 {
     private readonly ITaskAssigneeRepository _taskAssigneeRepository;

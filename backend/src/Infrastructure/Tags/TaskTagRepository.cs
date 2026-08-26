@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Tags;
 
+/// <summary>
+/// EF Core-backed implementation of ITaskTagRepository.
+/// </summary>
 public class TaskTagRepository : ITaskTagRepository
 {
     private readonly AppDbContext _context;

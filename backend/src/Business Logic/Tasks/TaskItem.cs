@@ -1,5 +1,8 @@
 namespace Business_Logic.Tasks;
 
+/// <summary>
+/// A task: belongs to a Project, can have a parent task (sub-tasks), and carries its own priority/status independent of the project's.
+/// </summary>
 public class TaskItem
 {
     public string TaskId { get; set; }

@@ -1,5 +1,8 @@
 namespace Business_Logic.Projects;
 
+/// <summary>
+/// A project: the top-level container that Tasks belong to.
+/// </summary>
 public class Project
 {
     public string ProjectID {get; set;}

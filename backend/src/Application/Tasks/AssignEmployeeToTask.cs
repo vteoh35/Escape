@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Assigns an employee to a task, with an optional role label.
+/// </summary>
 public class AssignEmployeeToTask
 {
     private readonly ITaskAssigneeRepository _taskAssigneeRepository;

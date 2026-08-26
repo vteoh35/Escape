@@ -1,5 +1,8 @@
 namespace Application.Attachments;
 
+/// <summary>
+/// Deletes an attachment. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteAttachment
 {
     private readonly IAttachmentRepository _attachmentRepository;

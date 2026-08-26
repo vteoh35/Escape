@@ -2,6 +2,9 @@ using Business_Logic.ActivityLogs;
 
 namespace Application.ActivityLogs;
 
+/// <summary>
+/// Updates an activity log entry's description. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateActivityLog
 {
     private readonly IActivityLogRepository _activityLogRepository;

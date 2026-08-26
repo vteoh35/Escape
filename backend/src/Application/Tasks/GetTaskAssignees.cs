@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Lists the employees assigned to a task.
+/// </summary>
 public class GetTaskAssignees
 {
     private readonly ITaskAssigneeRepository _taskAssigneeRepository;

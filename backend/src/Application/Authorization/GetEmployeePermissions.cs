@@ -4,6 +4,9 @@ using Application.Roles;
 
 namespace Application.Authorization;
 
+/// <summary>
+/// Resolves the set of permission names an employee holds, by following Employee.RoleId -> RolePermissions -> Permission. Returns an empty list if the employee has no role.
+/// </summary>
 public class GetEmployeePermissions
 {
     private readonly IEmployeeRepository _employeeRepository;

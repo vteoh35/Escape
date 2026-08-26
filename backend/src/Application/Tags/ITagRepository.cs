@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Data access contract for Tags, implemented in Infrastructure against Postgres.
+/// </summary>
 public interface ITagRepository
 {
     List<Tag> GetAll();

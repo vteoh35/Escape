@@ -2,6 +2,9 @@ using Business_Logic.Comments;
 
 namespace Application.Comments;
 
+/// <summary>
+/// Updates a comment's text. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateComment
 {
     private readonly ICommentRepository _commentRepository;

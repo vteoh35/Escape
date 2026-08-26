@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.PositionLevels;
 
+/// <summary>
+/// Creates a new position level. Level is manually assigned (not database-generated), so the caller picks it.
+/// </summary>
 public class CreatePositionLevel
 {
     private readonly IPositionLevelRepository _positionLevelRepository;

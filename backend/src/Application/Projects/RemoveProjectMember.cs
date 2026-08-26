@@ -1,5 +1,8 @@
 namespace Application.Projects;
 
+/// <summary>
+/// Removes an employee from a project's membership. Returns false if they weren't a member.
+/// </summary>
 public class RemoveProjectMember
 {
     private readonly IProjectMemberRepository _projectMemberRepository;

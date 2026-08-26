@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Applies a tag to a task.
+/// </summary>
 public class TagTask
 {
     private readonly ITaskTagRepository _taskTagRepository;

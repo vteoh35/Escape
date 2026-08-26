@@ -2,6 +2,9 @@ using AuthenticationEntity = Business_Logic.Employees.Authentication;
 
 namespace Application.Authentication;
 
+/// <summary>
+/// Sets a password (hashed) for an existing employee, creating their Authentication record.
+/// </summary>
 public class RegisterCredentials
 {
     private readonly IAuthenticationRepository _authenticationRepository;

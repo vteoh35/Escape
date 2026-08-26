@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Updates a tag's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateTag
 {
     private readonly ITagRepository _tagRepository;

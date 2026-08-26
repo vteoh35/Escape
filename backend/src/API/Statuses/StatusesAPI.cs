@@ -2,6 +2,9 @@ using Application.Statuses;
 
 namespace API.Statuses;
 
+/// <summary>
+/// Status endpoints: /statuses.
+/// </summary>
 public static class StatusesAPI
 {
     public static void MapStatusEndpoints(this WebApplication app)

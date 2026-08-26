@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Adds an employee to a project's membership, with an optional role label.
+/// </summary>
 public class AddProjectMember
 {
     private readonly IProjectMemberRepository _projectMemberRepository;

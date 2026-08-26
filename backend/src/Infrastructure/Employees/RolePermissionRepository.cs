@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Employees;
 
+/// <summary>
+/// EF Core-backed implementation of IRolePermissionRepository.
+/// </summary>
 public class RolePermissionRepository : IRolePermissionRepository
 {
     private readonly AppDbContext _context;

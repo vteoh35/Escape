@@ -1,5 +1,8 @@
 namespace Application.Tasks;
 
+/// <summary>
+/// Removes an employee's assignment from a task. Returns false if they weren't assigned.
+/// </summary>
 public class UnassignEmployeeFromTask
 {
     private readonly ITaskAssigneeRepository _taskAssigneeRepository;

@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Applies a tag to a project.
+/// </summary>
 public class TagProject
 {
     private readonly IProjectTagRepository _projectTagRepository;

@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Permissions;
 
+/// <summary>
+/// Updates a permission's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdatePermission
 {
     private readonly IPermissionRepository _permissionRepository;

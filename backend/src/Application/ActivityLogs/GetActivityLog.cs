@@ -2,6 +2,9 @@ using Business_Logic.ActivityLogs;
 
 namespace Application.ActivityLogs;
 
+/// <summary>
+/// Reads activity log entries, either all of them or by id.
+/// </summary>
 public class GetActivityLog
 {
     private readonly IActivityLogRepository _activityLogRepository;

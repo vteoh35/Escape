@@ -2,6 +2,9 @@ using Business_Logic.Statuses;
 
 namespace Application.Statuses;
 
+/// <summary>
+/// Reads statuses, either all of them or by id.
+/// </summary>
 public class GetStatus
 {
     private readonly IStatusRepository _statusRepository;

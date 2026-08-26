@@ -2,6 +2,9 @@ using Application.Tags;
 
 namespace API.Tags;
 
+/// <summary>
+/// Tag endpoints: /tags, plus task tagging sub-resources (project tagging lives in ProjectsAPI).
+/// </summary>
 public static class TagsAPI
 {
     public static void MapTagEndpoints(this WebApplication app)

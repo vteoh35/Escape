@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Reads projects, either all of them or by id.
+/// </summary>
 public class GetProject
 {
     private readonly IProjectRepository _projectRepository;

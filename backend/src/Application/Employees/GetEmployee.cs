@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Employees;
 
+/// <summary>
+/// Reads employees, either all of them or by id.
+/// </summary>
 public class GetEmployee
 {
     private readonly IEmployeeRepository _employeeRepository;

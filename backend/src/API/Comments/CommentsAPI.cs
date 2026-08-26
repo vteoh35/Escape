@@ -2,6 +2,9 @@ using Application.Comments;
 
 namespace API.Comments;
 
+/// <summary>
+/// Comment endpoints: /comments.
+/// </summary>
 public static class CommentsAPI
 {
     public static void MapCommentEndpoints(this WebApplication app)

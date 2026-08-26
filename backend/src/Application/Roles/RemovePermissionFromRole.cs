@@ -1,5 +1,8 @@
 namespace Application.Roles;
 
+/// <summary>
+/// Revokes a permission from a role. Returns false if it wasn't granted.
+/// </summary>
 public class RemovePermissionFromRole
 {
     private readonly IRolePermissionRepository _rolePermissionRepository;

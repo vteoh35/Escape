@@ -2,6 +2,9 @@ using Application.Permissions;
 
 namespace API.Permissions;
 
+/// <summary>
+/// Permission endpoints: /permissions.
+/// </summary>
 public static class PermissionsAPI
 {
     public static void MapPermissionEndpoints(this WebApplication app)

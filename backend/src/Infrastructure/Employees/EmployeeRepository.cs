@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Employees;
 
+/// <summary>
+/// EF Core-backed implementation of IEmployeeRepository.
+/// </summary>
 public class EmployeeRepository : IEmployeeRepository
 {
     private readonly AppDbContext _context;

@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Tasks;
 
+/// <summary>
+/// EF Core-backed implementation of ITaskAssigneeRepository.
+/// </summary>
 public class TaskAssigneeRepository : ITaskAssigneeRepository
 {
     private readonly AppDbContext _context;

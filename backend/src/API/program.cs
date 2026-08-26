@@ -44,6 +44,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+// Composition root: registers every repository and use-case class for DI, configures JWT auth and
+// permission-based authorization, wires up middleware, and maps every feature's HTTP endpoints.
+// Each block below follows the same shape (repository -> use cases), grouped by feature.
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Allow the Angular frontend to call this API. localhost:4200 always works for local dev;

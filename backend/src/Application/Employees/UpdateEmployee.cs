@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Employees;
 
+/// <summary>
+/// Updates an employee's name and email. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateEmployee
 {
     private readonly IEmployeeRepository _employeeRepository;

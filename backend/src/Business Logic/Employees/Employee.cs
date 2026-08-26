@@ -1,5 +1,8 @@
 namespace Business_Logic.Employees;
 
+/// <summary>
+/// A person on the team: identity, department, position level, and their RBAC role.
+/// </summary>
 public class Employee
 {
     public string EmployeeId { get; set; }

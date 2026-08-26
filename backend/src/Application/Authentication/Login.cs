@@ -1,5 +1,8 @@
 namespace Application.Authentication;
 
+/// <summary>
+/// Verifies an employee's credentials and, on success, returns a session token. Returns null on a bad employee id or password.
+/// </summary>
 public class Login
 {
     private readonly IAuthenticationRepository _authenticationRepository;

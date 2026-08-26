@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Creates a new task.
+/// </summary>
 public class CreateTask
 {
     private readonly ITaskRepository _taskRepository;

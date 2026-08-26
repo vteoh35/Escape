@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Employees;
 
+/// <summary>
+/// Creates a new employee record.
+/// </summary>
 public class CreateEmployee
 {
     private readonly IEmployeeRepository _employeeRepository;

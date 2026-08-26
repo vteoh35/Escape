@@ -3,6 +3,9 @@ using Application.Tags;
 
 namespace API.Projects;
 
+/// <summary>
+/// Project endpoints: /projects, plus project membership and project tagging sub-resources.
+/// </summary>
 public static class ProjectsAPI
 {
     public static void MapProjectEndpoints(this WebApplication app)

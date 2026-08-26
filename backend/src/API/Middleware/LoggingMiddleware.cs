@@ -2,6 +2,9 @@ using System.Diagnostics;
 
 namespace API.Middleware;
 
+/// <summary>
+/// Logs method, path, status code, and duration for every request.
+/// </summary>
 public class LoggingMiddleware
 {
     private readonly RequestDelegate _next;

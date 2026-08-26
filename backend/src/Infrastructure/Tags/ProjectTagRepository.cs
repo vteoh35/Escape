@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Tags;
 
+/// <summary>
+/// EF Core-backed implementation of IProjectTagRepository.
+/// </summary>
 public class ProjectTagRepository : IProjectTagRepository
 {
     private readonly AppDbContext _context;

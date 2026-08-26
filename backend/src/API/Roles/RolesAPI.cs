@@ -2,6 +2,9 @@ using Application.Roles;
 
 namespace API.Roles;
 
+/// <summary>
+/// Role endpoints: /roles, plus role-permission assignment sub-resources.
+/// </summary>
 public static class RolesAPI
 {
     public static void MapRoleEndpoints(this WebApplication app)

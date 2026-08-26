@@ -1,10 +1,14 @@
 namespace API.Middleware;
 
-// Catches every unhandled exception and returns a generic 500 with a safe message -- never the
-// exception details, so nothing internal (stack traces, SQL, connection strings) leaks to callers.
-// TODO (later, not now): map specific exception types to specific status codes if/when useful,
-// e.g. a "not found" domain exception -> 404, a validation exception -> 400. For now everything
-// is a flat 500 by design.
+/// <summary>
+/// Catches every unhandled exception and returns a flat 500 with a safe, generic message -- the
+/// real exception (stack trace, SQL, etc.) is logged server-side only, never sent to the caller.
+/// </summary>
+/// <remarks>
+/// TODO (later, not now): map specific exception types to specific status codes if/when useful,
+/// e.g. a "not found" domain exception -> 404, a validation exception -> 400. For now everything
+/// is a flat 500 by design.
+/// </remarks>
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;

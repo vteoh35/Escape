@@ -2,6 +2,9 @@ using Business_Logic.Priorities;
 
 namespace Application.Priorities;
 
+/// <summary>
+/// Updates a priority's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdatePriority
 {
     private readonly IPriorityRepository _priorityRepository;

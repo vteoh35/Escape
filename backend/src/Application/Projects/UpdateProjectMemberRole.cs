@@ -2,6 +2,9 @@ using Business_Logic.Projects;
 
 namespace Application.Projects;
 
+/// <summary>
+/// Updates a project member's role label. Returns null if the employee isn't a member of the project.
+/// </summary>
 public class UpdateProjectMemberRole
 {
     private readonly IProjectMemberRepository _projectMemberRepository;

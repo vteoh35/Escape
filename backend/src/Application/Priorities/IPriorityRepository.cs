@@ -2,6 +2,9 @@ using Business_Logic.Priorities;
 
 namespace Application.Priorities;
 
+/// <summary>
+/// Data access contract for Priorities, implemented in Infrastructure against Postgres.
+/// </summary>
 public interface IPriorityRepository
 {
     List<Priority> GetAll();

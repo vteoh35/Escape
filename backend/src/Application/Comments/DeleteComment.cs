@@ -1,5 +1,8 @@
 namespace Application.Comments;
 
+/// <summary>
+/// Deletes a comment. Returns false if the id doesn't exist.
+/// </summary>
 public class DeleteComment
 {
     private readonly ICommentRepository _commentRepository;

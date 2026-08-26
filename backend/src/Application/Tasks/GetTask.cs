@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Reads tasks, either all of them or by id.
+/// </summary>
 public class GetTask
 {
     private readonly ITaskRepository _taskRepository;

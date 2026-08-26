@@ -2,6 +2,9 @@ using Business_Logic.Comments;
 
 namespace Application.Comments;
 
+/// <summary>
+/// Creates a new comment on a task, optionally as a reply to another comment.
+/// </summary>
 public class CreateComment
 {
     private readonly ICommentRepository _commentRepository;

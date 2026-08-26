@@ -2,6 +2,9 @@ using Business_Logic.Attachments;
 
 namespace Application.Attachments;
 
+/// <summary>
+/// Creates a new attachment, optionally linked to a project and/or a task.
+/// </summary>
 public class CreateAttachment
 {
     private readonly IAttachmentRepository _attachmentRepository;

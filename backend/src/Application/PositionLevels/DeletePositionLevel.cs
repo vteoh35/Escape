@@ -1,5 +1,8 @@
 namespace Application.PositionLevels;
 
+/// <summary>
+/// Deletes a position level. Returns false if the level doesn't exist.
+/// </summary>
 public class DeletePositionLevel
 {
     private readonly IPositionLevelRepository _positionLevelRepository;

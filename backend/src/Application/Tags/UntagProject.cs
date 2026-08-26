@@ -1,5 +1,8 @@
 namespace Application.Tags;
 
+/// <summary>
+/// Removes a tag from a project. Returns false if it wasn't applied.
+/// </summary>
 public class UntagProject
 {
     private readonly IProjectTagRepository _projectTagRepository;

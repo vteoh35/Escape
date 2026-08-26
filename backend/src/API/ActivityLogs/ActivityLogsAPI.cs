@@ -2,6 +2,9 @@ using Application.ActivityLogs;
 
 namespace API.ActivityLogs;
 
+/// <summary>
+/// Activity log endpoints: /activity-logs.
+/// </summary>
 public static class ActivityLogsAPI
 {
     public static void MapActivityLogEndpoints(this WebApplication app)

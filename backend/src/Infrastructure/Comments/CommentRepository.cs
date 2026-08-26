@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Comments;
 
+/// <summary>
+/// EF Core-backed implementation of ICommentRepository.
+/// </summary>
 public class CommentRepository : ICommentRepository
 {
     private readonly AppDbContext _context;

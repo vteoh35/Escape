@@ -2,6 +2,9 @@ using Business_Logic.Employees;
 
 namespace Application.Employees;
 
+/// <summary>
+/// Data access contract for Employees, implemented in Infrastructure against Postgres.
+/// </summary>
 public interface IEmployeeRepository
 {
     List<Employee> GetAll();

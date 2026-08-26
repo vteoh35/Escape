@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Infrastructure.Authorization;
 
+/// <summary>
+/// Evaluates a PermissionRequirement: reads the caller's employee id from the JWT, resolves their permissions via GetEmployeePermissions, and succeeds if the required permission is present.
+/// </summary>
 public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
 {
     private readonly GetEmployeePermissions _getEmployeePermissions;

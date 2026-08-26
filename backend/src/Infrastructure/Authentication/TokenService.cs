@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Authentication;
 
+/// <summary>
+/// Issues signed JWTs. Takes the signing key as a constructor argument rather than reading it from configuration directly, so the caller (program.cs) controls where the key comes from.
+/// </summary>
 public class TokenService : ITokenService
 {
     private readonly string _signingKey;

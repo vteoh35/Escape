@@ -2,6 +2,9 @@ using Application.Employees;
 
 namespace API.Employees;
 
+/// <summary>
+/// Employee endpoints: /employees.
+/// </summary>
 public static class EmployeesAPI
 {
     public static void MapEmployeeEndpoints(this WebApplication app)

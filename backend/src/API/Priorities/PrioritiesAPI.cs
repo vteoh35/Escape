@@ -2,6 +2,9 @@ using Application.Priorities;
 
 namespace API.Priorities;
 
+/// <summary>
+/// Priority endpoints: /priorities.
+/// </summary>
 public static class PrioritiesAPI
 {
     public static void MapPriorityEndpoints(this WebApplication app)

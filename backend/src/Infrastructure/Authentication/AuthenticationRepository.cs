@@ -4,6 +4,9 @@ using AuthenticationEntity = Business_Logic.Employees.Authentication;
 
 namespace Infrastructure.Authentication;
 
+/// <summary>
+/// EF Core-backed implementation of IAuthenticationRepository.
+/// </summary>
 public class AuthenticationRepository : IAuthenticationRepository
 {
     private readonly AppDbContext _context;

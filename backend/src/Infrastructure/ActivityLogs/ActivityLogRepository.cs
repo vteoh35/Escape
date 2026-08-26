@@ -4,6 +4,9 @@ using Infrastructure.Database;
 
 namespace Infrastructure.ActivityLogs;
 
+/// <summary>
+/// EF Core-backed implementation of IActivityLogRepository.
+/// </summary>
 public class ActivityLogRepository : IActivityLogRepository
 {
     private readonly AppDbContext _context;

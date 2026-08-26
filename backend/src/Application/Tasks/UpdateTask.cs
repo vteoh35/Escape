@@ -2,6 +2,9 @@ using Business_Logic.Tasks;
 
 namespace Application.Tasks;
 
+/// <summary>
+/// Updates a task's name. Returns null if the id doesn't exist.
+/// </summary>
 public class UpdateTask
 {
     private readonly ITaskRepository _taskRepository;

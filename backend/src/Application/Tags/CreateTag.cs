@@ -2,6 +2,9 @@ using Business_Logic.Tags;
 
 namespace Application.Tags;
 
+/// <summary>
+/// Creates a new tag. TagId is database-generated, so callers only supply the name.
+/// </summary>
 public class CreateTag
 {
     private readonly ITagRepository _tagRepository;
